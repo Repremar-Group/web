@@ -1,0 +1,81 @@
+@charset "utf-8";
+/* CSS Document */
+
+header{
+	background-color: #091551;
+	height: 60px;
+	margin-top:20px;
+	margin-left:10px;
+	margin-right:10px;
+	
+}
+
+
+
+section{
+	text-align:left;
+
+}
+
+p.textos{
+	text-align:left;
+	margin-bottom:0px;
+	font: Arial;
+	color:#091551;
+	font-size:20px;
+
+}
+
+div{
+	margin-left:8%;
+	text-align:left;
+	margin-bottom:0px;
+	font: "Courier New", Courier, monospace;
+	color:#091551;
+	font-size:20px;
+}
+
+img.logo {
+	margin-left:30px;
+	margin-top:8px;
+}
+
+input.txtbox {
+	        text-align:left;
+            border: 1px solid #091551;
+            padding: 8px;
+			font:Verdana, Geneva, sans-serif;
+			color:#091551;
+        }
+		
+		
+div.upload{
+		text-align:left;
+		background: url(../img/attachcv.PNG) no-repeat;
+		margin-left: 0px;
+}
+
+
+div.upload input{
+		display:block !important;
+		width:142px !important;
+		height:44px !important;
+		opacity: 0 !important;
+		overflow:hidden !important;
+		margin-bottom:0px;
+}
+
+div.submit{
+		text-align:left;
+		background: url(../img/enviar.PNG) no-repeat;
+		margin-left: 0px;
+}
+
+div.submit input{
+		display:block !important;
+		width:225px !important;
+		height:44px !important;
+		opacity: 0 !important;
+		overflow:hidden !important;
+		margin-bottom:0px;
+}
