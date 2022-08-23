@@ -1,0 +1,13 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#home {
+	/*height:auto !important;*/
+	padding:40px 0px !important;
+}
+
+#home .home-inner.hero-content {
+	position:relative !important;
+	top:0 !important;
+	margin:0px !important;
+}
