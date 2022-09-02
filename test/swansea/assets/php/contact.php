@@ -30,9 +30,9 @@ $errorMessage = 'There was an error while submitting the form. Please try again 
 
 // SMTP settings
 $smtpUse = false; // Set to true to enable SMTP authentication
-$smtpHost = ''; // Enter SMTP host ie. smtp.gmail.com
-$smtpUsername = ''; // SMTP username ie. gmail address
-$smtpPassword = ''; // SMTP password ie gmail password
+$smtpHost = 'smtp.gmail.com'; // Enter SMTP host ie. smtp.gmail.com
+$smtpUsername = 'formularioweb.repremargroup@gmail.com'; // SMTP username ie. gmail address
+$smtpPassword = 'Formul4r10.22'; // SMTP password ie gmail password
 $smtpSecure = 'tls'; // Enable TLS or SSL encryption
 $smtpAutoTLS = false; // Enable Auto TLS
 $smtpPort = 587; // TCP port to connect to
