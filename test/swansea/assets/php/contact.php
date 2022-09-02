@@ -19,7 +19,7 @@ $sendToEmail = 'to@example.com'; // Email address that will receive the message 
 $sendToName = 'To Name'; // Name that will receive the message with the output of the form
 
 // Subject
-$subject = 'Message from Swansea web contact form';
+$subject = 'Mensaje desde la web de Swansea';
 
 // Fields - Value of attribute name => Text to appear in the email
 $fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'department' => 'Department');
@@ -33,9 +33,9 @@ $smtpUse = false; // Set to true to enable SMTP authentication
 $smtpHost = 'smtp.gmail.com'; // Enter SMTP host ie. smtp.gmail.com
 $smtpUsername = 'formularioweb.repremargroup@gmail.com'; // SMTP username ie. gmail address
 $smtpPassword = 'Formul4r10.22'; // SMTP password ie gmail password
-$smtpSecure = 'tls'; // Enable TLS or SSL encryption
+$smtpSecure = 'ssl'; // Enable TLS or SSL encryption
 $smtpAutoTLS = false; // Enable Auto TLS
-$smtpPort = 587; // TCP port to connect to
+$smtpPort = 465; // TCP port to connect to
 
 // reCAPTCHA settings
 $recaptchaUse = false; // Set to true to enable reCAPTHCA
