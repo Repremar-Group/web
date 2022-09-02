@@ -14,7 +14,7 @@ require 'PHPMailer/src/SMTP.php';
 
 // Recipients
 $fromEmail = 'formularioweb.repremargroup@gmail.com'; // Email address that will be in the from field of the message.
-$fromName = 'Formulario Web'; // Name that will be in the from field of the message.
+$fromName = 'Formulario Web Swansea'; // Name that will be in the from field of the message.
 $sendToEmail = 'naversa@repremar.com'; // Email address that will receive the message with the output of the form
 $sendToName = 'naversa@repremar.com'; // Name that will receive the message with the output of the form
 
@@ -38,8 +38,8 @@ $smtpAutoTLS = false; // Enable Auto TLS
 $smtpPort = 465; // TCP port to connect to
 
 // reCAPTCHA settings
-//$recaptchaUse = false; // Set to true to enable reCAPTHCA
-//$recaptchaSecret = 'YOUR_SECRET_KEY'; // enter your secret key from https://www.google.com/recaptcha/admin
+$recaptchaUse = false; // Set to true to enable reCAPTHCA
+$recaptchaSecret = 'YOUR_SECRET_KEY'; // enter your secret key from https://www.google.com/recaptcha/admin
 
 /*
 *  LET'S DO THE SENDING
