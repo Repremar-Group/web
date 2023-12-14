@@ -9,6 +9,7 @@
 	$emailed = false;
 	if(!empty($_POST['Nombre'])) {
 		$mail = new PHPMailer(true);
+		try {
 		//codigo nuestro sacado de calidad
 		//Configuración del server
 		$mail->CharSet= 'utf-8';                   //Seteo el UTF-8
@@ -38,8 +39,11 @@
 		$mail->IsHTML(true);
 		$mail->CharSet = 'UTF-8';
 		$mail->Send();
-
-
+		}
+		catch (Exception $e) {
+			alert ("No se puedo envíar el mail. Mailer Error: {$mail->ErrorInfo}");
+		
+		}
 		                                                                                                                     
 		$emailed = true;
 
