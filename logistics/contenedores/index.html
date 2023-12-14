@@ -14,7 +14,7 @@
         property="twitter:image" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="Webflow" name="generator" />
-    <link rel="stylesheet" href="assets/css/all.min.css" integrity="sha512-....." crossorigin="anonymous" />
+    <link rel="stylesheet" href="/assets/css/all.css" integrity="sha512-....." crossorigin="anonymous" />
     
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
@@ -129,6 +129,22 @@ a.icon2 {
     font-size: 60px;
     text-align: center;
     margin-top: 60px;
+}
+.w-input, .w-select {
+    width: 80%;
+    height: 38px;
+    color: #333;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 a.parrafo {
     color: #fff;
@@ -444,7 +460,7 @@ form#email-form-2 {
         padding-bottom: 50px;
 }
 .portada-movil {
-        background-image: url(/assets/img/fondo-portada25.jpg);
+        background-image: url(assets/img/fondo-portada25.jpg);
     background-size: cover;
 }
 .intro-text {
@@ -532,7 +548,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/repremar/assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body class="body">
@@ -551,7 +567,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div data-collapse="medium" data-animation="default" data-duration="400" data-easing="ease" data-easing2="ease"
         role="banner" class="navigation w-nav">
-        <div class="navigation-items"><a href="/" aria-current="page" class="logo-link w-nav-brand w--current"><img
+        <div class="navigation-items"><a href="../index.html" aria-current="page" class="logo-link w-nav-brand w--current"><img
                     src="assets/img/logo_logistics_2.png"
                     width="65" sizes="(max-width: 479px) 100vw, 200.00001525878906px"
                     srcset="assets/img/logo_logistics_2.png"
@@ -593,17 +609,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
 
             <div class="form-block-2 w-form">
-                <form id="email-form" action="envio.php" name="email-form" data-name="Email Form" method="get" class="form-2"
-                    data-wf-page-id="654108e3c9f54f7608d2d8df"
-                    data-wf-element-id="135f2cf9-576b-2438-b4ca-b4518a48cdfc">
+                <form id="email-form" action="enviar.php"  method="post" class="form-2">
                     <label for="nombre" class="field-label-4">Nombre</label>
-                        <input type="text" class="w-input" maxlength="256" name="Nombre" data-name="Nombre" id="Nombre" />
+                        <input type="text" class="w-input" maxlength="256" name="Nombre"  id="Nombre" />
                     <label for="apellido" class="field-label-4">Apellido</label>
-                        <input type="text" class="w-input" maxlength="256" name="apellido" data-name="apellido" id="apellido" />
+                        <input type="text" class="w-input" maxlength="256" name="apellido"  id="apellido" />
                     <label for="email" class="field-label-3">Email </label>
-                        <input type="email" class="w-input" maxlength="256" name="email" data-name="Email"  id="email" required="" />
+                        <input type="email" class="w-input" maxlength="256" name="email"   id="email" required="" />
                     <label for="Tel-fono" class="field-label-3">Comentarios</label>
-                        <input type="text" class="w-input" maxlength="256" name="comentarios" data-name="Teléfono"  id="comentarios" />
+                        <input type="text" class="w-input" maxlength="256" name="comentarios"   id="comentarios" />
                         <div class="centrado">
                         <input type="submit" value="ENVIAR CONSULTA" data-wait="Please wait..." class="submit-button w-button" />
                         </div>
@@ -664,22 +678,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
                 
                 </div>
-                
-                    <form id="email-form-2" name="email-form-2" data-name="Email Form 2" method="get" class="form"
-                data-wf-page-id="654108e3c9f54f7608d2d8df" data-wf-element-id="dbb56e95-6cb9-a5c1-91c2-12cb897bc87e">
-                        
-                
-                <label for="name-2" class="field-label">NOMBRE</label>
-                <input type="text" class="text-field-3 w-input" maxlength="256" name="name-2" data-name="Name 2"  id="name-2" />
-                <label for="name-2" class="field-label">APELLIDO</label>
-                <input type="text" class="text-field-3 w-input" maxlength="256" name="apellido-2" data-name="apellido 2"  id="apellido-2" />
-                <label for="TELEFONO" class="field-label-2">CORREO ELECTRONICO</label>
-                <input type="tel" class="text-field-4 w-input" maxlength="256" name="TELEFONO" data-name="TELEFONO"  id="TELEFONO" required="" />
-                <label for="email-2" class="field-label-2">COMENTARIOS</label>
-                <input type="text" class="text-field-2 w-input" maxlength="256" name="comentarios-2" data-name="comentarios 2"  id="comentarios-2" required="" />
-                <input type="submit" value="CONTACTANOS" data-wait="Please wait..."
-                    class="button-2 w-button" />
-            </form>
+  
+  
+                  <form id="email-form" action="enviar.php"  method="post" class="form">
+                    <label for="nombre" class="field-label-4">Nombre</label>
+                        <input type="text" class="w-input" maxlength="256" name="Nombre"  id="Nombre" />
+                    <label for="apellido" class="field-label-4">Apellido</label>
+                        <input type="text" class="w-input" maxlength="256" name="apellido"  id="apellido" />
+                    <label for="email" class="field-label-3">Email </label>
+                        <input type="email" class="w-input" maxlength="256" name="email"   id="email" required="" />
+                    <label for="Tel-fono" class="field-label-3">Comentarios</label>
+                        <input type="text" class="w-input" maxlength="256" name="comentarios"   id="comentarios" />
+                        <div class="centrado">
+                        <input type="submit" value="ENVIAR CONSULTA" data-wait="Please wait..." class="submit-button w-button" />
+                        </div>
+                </form>
+                    
             <div class="w-form-done">
                 <div>Thank you! Your submission has been received!</div>
             </div>
