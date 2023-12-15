@@ -609,7 +609,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
 
             <div class="form-block-2 w-form">
-                <form name="containers" data-netlify="true" onSubmit="submit"  method="post" class="form">
+                <form name="containers" data-netlify="true" onSubmit="submit"  method="post" class="form-2">
                     <label for="nombre" class="field-label-4">Nombre</label>
                         <input type="text" class="w-input" maxlength="256" name="nombre"  id="Nombre" />
                     <label for="apellido" class="field-label-4">Apellido</label>
@@ -619,7 +619,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <label for="Tel-fono" class="field-label-3">Comentarios</label>
                         <input type="text" class="w-input" maxlength="256" name="comentarios"   id="comentarios" />
                         <div class="centrado">
-                        <button type="submit" class="w-nav-button">Enviar Consulta</button>
+                        <input type="submit" value="ENVIAR CONSULTA" data-wait="Please wait..." class="submit-button w-button" />
                         </div>
                 </form>
                 <div class="w-form-done">
@@ -680,19 +680,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
   
   
-                <form name="containers" data-netlify="true" onSubmit="submit"  method="post" class="form">
-                    <label for="nombre" class="field-label-4">Nombre</label>
-                        <input type="text" class="w-input" maxlength="256" name="nombre"  id="Nombre" />
-                    <label for="apellido" class="field-label-4">Apellido</label>
-                        <input type="text" class="w-input" maxlength="256" name="apellido"  id="apellido" />
-                    <label for="email" class="field-label-3">Email </label>
-                        <input type="email" class="w-input" maxlength="256" name="email"   id="email" required="" />
-                    <label for="Tel-fono" class="field-label-3">Comentarios</label>
-                        <input type="text" class="w-input" maxlength="256" name="comentarios"   id="comentarios" />
-                        <div class="centrado">
-                        <button type="submit" class="w-nav-button">Enviar Consulta</button>
-                        </div>
-                </form>
+                <div class="form-block-2 w-form">
+                    <form name="containers" data-netlify="true" onSubmit="submit"  method="post" class="form-2">
+                        <label for="nombre" class="field-label-4">Nombre</label>
+                            <input type="text" class="w-input" maxlength="256" name="nombre"  id="Nombre" />
+                        <label for="apellido" class="field-label-4">Apellido</label>
+                            <input type="text" class="w-input" maxlength="256" name="apellido"  id="apellido" />
+                        <label for="email" class="field-label-3">Email </label>
+                            <input type="email" class="w-input" maxlength="256" name="email"   id="email" required="" />
+                        <label for="Tel-fono" class="field-label-3">Comentarios</label>
+                            <input type="text" class="w-input" maxlength="256" name="comentarios"   id="comentarios" />
+                            <div class="centrado">
+                            <input type="submit" value="ENVIAR CONSULTA" data-wait="Please wait..." class="submit-button w-button" />
+                            </div>
+                    </form>
+                    <div class="w-form-done">
+                        <div>Thank you! Your submission has been received!</div>
+                    </div>
+                    <div class="w-form-fail">
+                        <div>Oops! Something went wrong while submitting the form.</div>
+                    </div>
+                    
+                </div>
                     
   </div>      
         <div class="w-row2">
