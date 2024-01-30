@@ -26,7 +26,7 @@ Author:		elemis
   --bs-red: #e2626b;
   --bs-orange: #f78b77;
   --bs-yellow: #fab758;
-  --bs-green: #45c4a0;
+  --bs-green: #32BCAD;
   --bs-leaf: #7cb798;
   --bs-aqua: #54a8c7;
   --bs-navy: #343f52;
@@ -51,7 +51,7 @@ Author:		elemis
   --bs-red-rgb: 226, 98, 107;
   --bs-orange-rgb: 247, 139, 119;
   --bs-yellow-rgb: 250, 183, 88;
-  --bs-green-rgb: 69, 196, 160;
+  --bs-green-rgb: 50, 188, 176;
   --bs-leaf-rgb: 124, 183, 152;
   --bs-aqua-rgb: 84, 168, 199;
   --bs-navy-rgb: 52, 63, 82;
@@ -37596,7 +37596,7 @@ footer.bg-dark,
   background: rgba(30, 34, 40, 0.3);
 }
 .image-wrapper.bg-overlay-400:before {
-  background: rgba(30, 34, 40, 0.4);
+  background: rgba(30, 34, 40, 0);
 }
 .image-wrapper.bg-overlay-light-300:before {
   background: rgba(255, 255, 255, 0.3);
