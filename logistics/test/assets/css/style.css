@@ -9302,6 +9302,10 @@ textarea.form-control.is-invalid {
   --bs-text-opacity: 1;
   color: #fff !important;
 }
+.text-repre {
+  --bs-text-opacity: 1;
+  color: #38C0C7 !important;
+}
 .text-light {
   --bs-text-opacity: 1;
   color: #fefefe !important;
