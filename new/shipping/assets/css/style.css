@@ -23,7 +23,7 @@ Author:		elemis
   --bs-violet: #a07cc5;
   --bs-pink: #d16b86;
   --bs-fuchsia: #e668b3;
-  --bs-red: #e2626b;
+  --bs-red: #D71920;
   --bs-orange: #f78b77;
   --bs-yellow: #fab758;
   --bs-green: #32BCAD;
@@ -48,7 +48,7 @@ Author:		elemis
   --bs-violet-rgb: 160, 124, 197;
   --bs-pink-rgb: 209, 107, 134;
   --bs-fuchsia-rgb: 230, 104, 179;
-  --bs-red-rgb: 226, 98, 107;
+  --bs-red-rgb: 215, 25, 32;
   --bs-orange-rgb: 247, 139, 119;
   --bs-yellow-rgb: 250, 183, 88;
   --bs-green-rgb: 50, 188, 176;
@@ -27854,6 +27854,7 @@ button:focus {
 }
 .avatar {
   display: flex;
+  align-self: center;
   align-items: center;
   justify-content: center;
   font-weight: 700;
@@ -33596,6 +33597,7 @@ img.svg-inject {
 }
 .uil-envelope:before {
   content: "\eac8";
+  color: red;
 }
 .uil-envelopes:before {
   content: "\eac9";
@@ -34412,6 +34414,7 @@ img.svg-inject {
 }
 .uil-location-pin-alt:before {
   content: "\ebd8";
+  color: var(--bs-red);
 }
 .uil-location-arrow:before {
   content: "\ebd9";
@@ -34772,6 +34775,7 @@ img.svg-inject {
 }
 .uil-phone-volume:before {
   content: "\ec50";
+  color: red;
 }
 .uil-phone:before {
   content: "\ec51";

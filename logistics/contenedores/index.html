@@ -619,6 +619,29 @@
         .paragraph-bigger.cc-bigger-light {
             text-align: center;
         }
+
+        .rectangle {
+            width: 100px;
+            height: 40px;
+            background-color:red;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            margin-left: 38%;
+            margin-top: 10px;
+            /* Adjust as needed to vertically center the text */
+        }
+        .rectangle-ok {
+            width: 100px;
+            height: 40px;
+            background-color:rgb(16, 193, 247);
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            margin-left: 38%;
+            margin-top: 10px;
+            /* Adjust as needed to vertically center the text */
+        }
     </style>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -768,29 +791,28 @@
             </div>
 
             <form data-netlify="true" onSubmit="submit" name="containers" method="post" class="form"
-                        action="success.html" data-netlify-honeypot="botfield">
-                        <div class="form-group">
-                            <label for="name1" style="color:#fff">Nombre</label>
-                            <input type="text" class="form-control" id="name1" name="Nombre" required>
-                            <input type="text" class="d-none" id="botfield" name="Nombre">
-                        </div>
-                        <div class="form-group">
-                            <label for="apellido1" style="color:#fff">Apellido</label>
-                            <input type="text" class="form-control" id="apellido1" name="Apellido" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email1" style="color:#fff">Email</label>
-                            <input type="email" class="form-control" id="email1" name="Email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="comentarios1" style="color:#fff">Comentarios</label>
-                            <input type="text" class="form-control" id="comentarios1" name="Comentarios"
-                                maxlength="256">
-                        </div>
-                        <button type="submit" id="btnsubmit" class="btn btn-primary"
-                            style="background-color: #31bcad;">Enviar Consulta</button>
+                action="success.html" data-netlify-honeypot="botfield">
+                <div class="form-group">
+                    <label for="name1" style="color:#fff">Nombre</label>
+                    <input type="text" class="form-control" id="name1" name="Nombre" required>
+                    <input type="text" class="d-none" id="botfield" name="Nombre">
+                </div>
+                <div class="form-group">
+                    <label for="apellido1" style="color:#fff">Apellido</label>
+                    <input type="text" class="form-control" id="apellido1" name="Apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="email1" style="color:#fff">Email</label>
+                    <input type="email" class="form-control" id="email1" name="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="comentarios1" style="color:#fff">Comentarios</label>
+                    <input type="text" class="form-control" id="comentarios1" name="Comentarios" maxlength="256">
+                </div>
+                <button type="submit" id="btnsubmit" class="btn btn-primary" style="background-color: #31bcad;">Enviar
+                    Consulta</button>
 
-                    </form>
+            </form>
         </div>
 
         <div class="w-row2">
@@ -836,7 +858,7 @@
                     alt="" />
                 <h6 class="descripcion-cont">STANDARD 20´</h6>
                 <h7 class="descripcion-cont">L 5.9 mts x W 2.35 mts x H 2.393 mts – 33.2 m3</h7>
-
+                <div class="rectangle">sin stock</div>
             </div>
             <div class="w-col w-col-3">
                 <img class="imagen-contenedores" src="assets/img/estandar40.png" loading="lazy"
@@ -845,6 +867,7 @@
                     alt="" />
                 <h6 class="descripcion-cont">STANDARD 40´</h6>
                 <h7 class="descripcion-cont">L 12.036 mts x W 2.35 mts x H 2.392 mts - 67.7 m3</h7>
+                <div class="rectangle">sin stock</div>
             </div>
             <div class="w-col w-col-3">
                 <img class="imagen-contenedores" src="assets/img/HIGHCUBE40.png" loading="lazy"
@@ -853,6 +876,7 @@
                     alt="" />
                 <h6 class="descripcion-cont">HIGH CUBE 40´</h6>
                 <h7 class="descripcion-cont">L 12.036 mts x W 2.697 mts x H 2.585 mts - 76.3 m3</h7>
+                <div class="rectangle-ok">con stock</div>
             </div>
             <!--<div class="w-col w-col-3">
                         <img class="imagen-contenedores" src="assets/img/contenedor114.png" loading="lazy" sizes="(max-width: 479px) 100vw, (max-width: 767px) 90vw, (max-width: 991px) 21vw, 22vw" srcset="assets/img/contenedor114.png 500w, assets/img/contenedor114.png 800w, assets/img/contenedor114.png 844w" alt="" />
