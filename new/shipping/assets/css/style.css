@@ -9304,7 +9304,7 @@ textarea.form-control.is-invalid {
 }
 .text-repre {
   --bs-text-opacity: 1;
-  color: #38C0C7 !important;
+  color: var(--bs-red) !important;
 }
 .text-light {
   --bs-text-opacity: 1;
@@ -37733,4 +37733,26 @@ footer.bg-dark.angled.upper-end:before {
 footer.bg-dark.angled.lower-start:after,
 footer.bg-dark.angled.upper-start:before {
   border-left-color: #21262c !important;
+}
+
+.container-logos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+}
+
+.logo {
+  border: 2px solid red;
+  padding: 10px;
+  text-align: center;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.text-logo {
+  color: red;
+  margin-top: 10px;
 }
