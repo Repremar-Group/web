@@ -36,7 +36,7 @@ Author:		elemis
   --bs-light: #fefefe;
   --bs-gray: #f6f7f9;
   --bs-dark: #262b32;
-  --bs-primary: #3f78e0;
+  --bs-primary: #32bcac;
   --bs-secondary: #aab0bc;
   --bs-success: #45c4a0;
   --bs-info: #54a8c7;
@@ -61,13 +61,13 @@ Author:		elemis
   --bs-light-rgb: 254, 254, 254;
   --bs-gray-rgb: 246, 247, 249;
   --bs-dark-rgb: 38, 43, 50;
-  --bs-primary-rgb: 63, 120, 224;
+  --bs-primary-rgb: 50, 188, 173;
   --bs-secondary-rgb: 170, 176, 188;
   --bs-success-rgb: 69, 196, 160;
   --bs-info-rgb: 84, 168, 199;
   --bs-warning-rgb: 250, 183, 88;
   --bs-danger-rgb: 226, 98, 107;
-  --bs-primary-text-emphasis: #2c549d;
+  --bs-primary-text-emphasis: #32bcac;
   --bs-secondary-text-emphasis: #777b84;
   --bs-success-text-emphasis: #308970;
   --bs-info-text-emphasis: #3b768b;
@@ -5333,9 +5333,9 @@ fieldset:disabled .btn {
   --bs-nav-link-padding-y: 1.2rem;
   --bs-nav-link-font-size: 0.8rem;
   --bs-nav-link-font-weight: 700;
-  --bs-nav-link-color: #343f52;
+  --bs-nav-link-color: #32bcac;
   --bs-nav-link-hover-color: var(--bs-primary);
-  --bs-nav-link-disabled-color: #959ca9;
+  --bs-nav-link-disabled-color: #32bcac;
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
@@ -5463,7 +5463,7 @@ fieldset:disabled .btn {
   --bs-navbar-padding-y: 0;
   --bs-navbar-color: #343f52;
   --bs-navbar-hover-color: var(--bs-primary);
-  --bs-navbar-disabled-color: rgba(52, 63, 82, 0.3);
+  --bs-navbar-disabled-color: rgba(50, 188, 172, 0.3);
   --bs-navbar-active-color: var(--bs-primary);
   --bs-navbar-brand-padding-y: 0;
   --bs-navbar-brand-margin-end: 0;
