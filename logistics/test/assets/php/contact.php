@@ -13,13 +13,13 @@ require 'PHPMailer/src/SMTP.php';
 */
 
 // Recipients
-$fromEmail = 'from@example.com'; // Email address that will be in the from field of the message.
-$fromName = 'From Name'; // Name that will be in the from field of the message.
-$sendToEmail = 'to@example.com'; // Email address that will receive the message with the output of the form
-$sendToName = 'To Name'; // Name that will receive the message with the output of the form
+$fromEmail = 'web.repremar@gamail.com'; // Email address that will be in the from field of the message.
+$fromName = 'Web Repremar'; // Name that will be in the from field of the message.
+$sendToEmail = 'it@repremar.com'; // Email address that will receive the message with the output of the form
+$sendToName = 'Sistemas'; // Name that will receive the message with the output of the form
 
 // Subject
-$subject = 'Message from Sandbox contact form';
+$subject = 'Message from Web Logistics contact form';
 
 // Fields - Value of attribute name => Text to appear in the email
 $fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'department' => 'Department');
@@ -38,7 +38,7 @@ $smtpAutoTLS = false; // Enable Auto TLS
 $smtpPort = 587; // TCP port to connect to
 
 // reCAPTCHA settings
-$recaptchaUse = false; // Set to true to enable reCAPTHCA
+$recaptchaUse = true; // Set to true to enable reCAPTHCA
 $recaptchaSecret = 'YOUR_SECRET_KEY'; // enter your secret key from https://www.google.com/recaptcha/admin
 
 /*
