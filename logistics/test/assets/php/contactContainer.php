@@ -14,15 +14,15 @@ require 'PHPMailer/src/SMTP.php';
 
 // Recipients
 $fromEmail = 'alertasrepremar@gmail.com'; // Email address that will be in the from field of the message.
-$fromName = 'Contacto desde la Web de Repremar Logistics'; // Name that will be in the from field of the message.
+$fromName = 'Contacto desde la Web de Contenedores'; // Name that will be in the from field of the message.
 $sendToEmail = 'it@repremar.com'; // Email address that will receive the message with the output of the form
 $sendToName = 'Sistemas'; // Name that will receive the message with the output of the form
 
 // Subject
-$subject = 'Message from Web Logistics contact form';
+$subject = 'Message from contenedores contact form';
 
 // Fields - Value of attribute name => Text to appear in the email
-$fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'country' => 'Country', 'service' => 'Service');
+$fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'country' => 'Country', 'type' => 'Type');
 
 // Success and error alerts
 $okMessage = 'We have received your inquiry. Stay tuned, we’ll get back to you very soon.';
