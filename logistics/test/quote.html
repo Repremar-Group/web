@@ -11,7 +11,7 @@
   <link rel="shortcut icon" href="./assets/img/favicon.png">
   <link rel="stylesheet" href="./assets/css/plugins.css">
   <link rel="stylesheet" href="./assets/css/style.css">
-  
+  <!--script src=”https://www.google.com/recaptcha/api.js” async defer></script-->
 </head>
 
 <body>
@@ -142,7 +142,7 @@
           <div class="col-xl-10 mx-auto">
             <div class="row gy-10 gx-lg-8 gx-xl-12">
               <div class="col-lg-8">
-                <form class="contact-form" method="post" name="webLogistics-quote" data-netlify="true" onSubmit="submit" >
+                <form class="contact-form" method="post" name="webLogistics-quote" data-netlify="true" onSubmit="submit" data-netlify-recaptcha="true">
                   <!--form class="contact-form needs-validation" method="post" name="webLogistics-quote" action="./assets/php/contact.php" novalidate-->
                   <div class="messages"></div>
                   <div class="row gx-4">
@@ -206,7 +206,8 @@
                         <div class="invalid-feedback"> Please enter your messsage. </div>
                       </div>
                     </div>
-
+                    
+                    <div data-netlify-recaptcha="true"></div>
                     <!--div class="col-12">
                       <script src="https://www.google.com/recaptcha/api.js"></script>
                       <div class="form-group">
