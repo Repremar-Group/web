@@ -11,7 +11,7 @@
   <link rel="shortcut icon" href="./assets/img/favicon.png">
   <link rel="stylesheet" href="./assets/css/plugins.css">
   <link rel="stylesheet" href="./assets/css/style.css">
-  <script src=”https://www.google.com/recaptcha/api.js” async defer></script>
+  <!--script src=”https://www.google.com/recaptcha/api.js” async defer></script-->
 </head>
 
 <body>
@@ -33,29 +33,29 @@
             <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
               <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="./aboutLogistics.html"">About Us</a>
+                  <a class="nav-link" href="./aboutLogistics.html">About Us</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
                   <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="dropdown-item" href="./Ocean.html"">Ocean</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="./Air.html"">Air</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="./Land.html"">Road</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="./container.html"">Containers</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./Ocean.html">Ocean</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./Air.html">Air</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./Land.html">Road</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./container.html">Containers</a></li>
 
-                    <li class="nav-item"><a class="dropdown-item" href="./Project.html"">Project Cargo</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="./warehouse.html"">Warehousing</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./Project.html">Project Cargo</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="./warehouse.html">Warehousing</a></li>
 
                   </ul>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="./technology.html"">Technology</a>
+                  <a class="nav-link" href="./technology.html">Technology</a>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="./green.html"">Go Green</a>
+                  <a class="nav-link" href="./green.html">Go Green</a>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="./contact.html"">Contact</a>
+                  <a class="nav-link" href="./contact.html">Contact</a>
                 </li>
                 
                   <!--/.dropdown-menu -->
@@ -142,7 +142,8 @@
           <div class="col-xl-10 mx-auto">
             <div class="row gy-10 gx-lg-8 gx-xl-12">
               <div class="col-lg-8">
-                <form class="contact-form needs-validation" method="post" name="webLogistics" action="./assets/php/contact.php" novalidate>
+                <form class="contact-form" method="post" name="webLogistics-quote" data-netlify="true" onSubmit="submit" data-netlify-recaptcha="true" action="success.html">
+                  <!--form class="contact-form needs-validation" method="post" name="webLogistics-quote" action="./assets/php/contact.php" novalidate-->
                   <div class="messages"></div>
                   <div class="row gx-4">
                     <div class="col-md-6">
@@ -179,7 +180,7 @@
                           <option value="Ocean">Ocean</option>
                           <option value="Air">Air</option>
                           <option value="Road">Road</option>
-                          <option value="project">Project Cargo</option>
+                          <option value="Project Cargo">Project Cargo</option>
                         </select>
                         <div class="valid-feedback"> Looks good! </div>
                         <div class="invalid-feedback"> Please select a department. </div>
@@ -189,8 +190,8 @@
                       <div class="form-select-wrapper mb-4">
                         <select class="form-select" id="form-select" name="country" required>
                           <option selected disabled value="">Select a Country</option>
-                          <option value="Sales">Uruguay</option>
-                          <option value="Marketing">Paraguay</option>
+                          <option value="Uruguay">Uruguay</option>
+                          <option value="Paraguay">Paraguay</option>
                         </select>
                         <div class="valid-feedback"> Looks good! </div>
                         <div class="invalid-feedback"> Please select a country. </div>
@@ -205,8 +206,10 @@
                         <div class="invalid-feedback"> Please enter your messsage. </div>
                       </div>
                     </div>
+                    
+                    <div data-netlify-recaptcha="true"></div>
 
-                    <div class="col-12">
+                    <!--div class="col-12">
                       <script src="https://www.google.com/recaptcha/api.js"></script>
                       <div class="form-group">
                         <input class="form-control d-none" data-recaptcha="true" required>
@@ -218,13 +221,13 @@
                           Please complete the Captcha
                         </div>
                       </div>
-                    </div>
+                    </div-->
                     <br>
                     <!-- /column -->
                     <!-- /column -->
                     <!-- /column -->
                     <div class="col-12">
-                      <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="Send message">
+                      <button type="submit" class="btn btn-primary rounded-pill btn-send mb-3">Send Message</button>
                       <p class="text-muted"><strong>*</strong> These fields are required.</p>
                     </div>
                     <!-- /column -->
