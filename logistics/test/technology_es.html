@@ -16,15 +16,14 @@
 
 <body>
   <div class="content-wrapper">
-    <header class="wrapper bg-soft-primary">
-      <nav class="navbar navbar-expand-lg classic transparent navbar-light">
+    <header class="wrapper">
+      <nav class="navbar navbar-expand-lg center-nav transparent position-absolute navbar-dark px-md-10 px-xxl-0">
         <div class="container flex-lg-row flex-nowrap align-items-center">
           <div class="navbar-brand w-100">
             <a href="./index.html">
               <img class="logo-dark" src="./assets/img/LogisticsHorizontal.png"  alt="Repremar Logistics Logo" />
-              <img class="logo-light" src="./assets/img/LogisticsHorizontal.png"  alt="Repremar Logistics Logo" />
-        
-            </a>
+              <img class="logo-light" src="./assets/img/LogisticsHorizontalBlanco.png"  alt="Repremar Logistics Logo" />
+             </a>
           </div>
           <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
             <div class="offcanvas-header d-lg-none">
@@ -33,6 +32,9 @@
             </div>
             <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
               <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="./aboutLogistics.html"">About Us</a>
+                </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link" href="./aboutLogistics_es.html"">Sobre nosotros</a>
                 </li>
@@ -58,11 +60,11 @@
                 </li>
                 
                   <!--/.dropdown-menu -->
-             </ul>
+              </ul>
               <!-- /.navbar-nav -->
               <div class="offcanvas-footer d-lg-none">
                 <div>
-                  <a href="mailto:info.logistics@repremar.com" class="link-inverse">info.logistics@repremar.com</a>
+                  <a href="mailto:first.last@email.com" class="link-inverse">info.logistics@repremar.com</a>
                   <br/><a href="tel:+59829169416">+598 2916 9416</a>  <br/>
                   <nav class="nav social social-white mt-4">
                     <a href="https://www.instagram.com/repremarlogistics/"><i class="uil uil-instagram"></i></a>
@@ -75,13 +77,14 @@
             </div>
             <!-- /.offcanvas-body -->
           </div>
+
           <!-- /.navbar-collapse -->
           <div class="navbar-other w-100 d-flex ms-auto">
             <ul class="navbar-nav flex-row align-items-center ms-auto">
               <li class="nav-item dropdown language-select text-uppercase">
                 <a class="nav-link dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Es</a>
                 <ul class="dropdown-menu">
-                  <li class="nav-item"><a class="dropdown-item" href="Ocean.html">En</a></li>
+                  <li class="nav-item"><a class="dropdown-item" href="technology.html">En</a></li>
                   <li class="nav-item"><a class="dropdown-item" href="#">Es</a></li>
                 </ul>
               </li>
@@ -99,10 +102,6 @@
         <!-- /.container -->
       </nav>
       <!-- /.navbar -->
-      
-      <!--/.modal -->
-      
-      <!--/.modal -->
       <div class="offcanvas offcanvas-end text-inverse" id="offcanvas-info" data-bs-scroll="true">
         <div class="offcanvas-header">
           <h3 class="text-white fs-30 mb-0">Repremar Logistics</h3>
@@ -111,12 +110,12 @@
         <div class="offcanvas-body pb-6">
           <div class="widget mb-8">
             <p>Servicios de transporte y logística.</p>
-           </div>
+          </div>
           <!-- /.widget -->
           <div class="widget mb-8">
             <h4 class="widget-title text-white mb-3">Contacto</h4>
             <address> Misiones 1372, 6th Floor <br /> Montevideo, Uruguay </address>
-            <a href="mailto:info.logistics@repremar.com">info.logistics@repremar.com</a><br /><a href="tel:+59829169416">+598 2916 9416</a>
+            <a href="mailto:info.logistics@repremar.com">info.logistics@repremar.com</a><br /><a href="tel:+59829169416">+598 2916 9416</a> 
           </div>
           <!-- /.widget -->
           <div class="widget mb-8">
@@ -128,10 +127,11 @@
           </div>
           <!-- /.widget -->
           <div class="widget">
-            <h4 class="widget-title text-white mb-3">Seguinos</h4>
+            <h4 class="widget-title text-white mb-3">Follow Us</h4>
             <nav class="nav social social-white">
               <a href="https://www.instagram.com/repremarlogistics/"><i class="uil uil-instagram"></i></a>
               <a href="https://www.linkedin.com/company/repremar-logistics"><i class="uil uil-linkedin"></i></a>
+           
             </nav>
             <!-- /.social -->
           </div>
@@ -140,14 +140,17 @@
         <!-- /.offcanvas-body -->
       </div>
       <!-- /.offcanvas -->
+    
+      <!-- /.offcanvas -->
     </header>
     <!-- /header -->
-    <section class="wrapper bg-soft-primary">
-      <div class="container pt-10 pb-19 pt-md-14 pb-md-20 text-center">
+
+    <section class="wrapper image-wrapper bg-image bg-overlay text-white" data-image-src="./assets/img/photos/techImage.jpg">
+      <div class="container pt-19 pt-md-21 pb-18 pb-md-20 text-center">
         <div class="row">
-          <div class="col-md-8 col-lg-7 col-xl-6 col-xxl-5 mx-auto mb-11">
-            <h1 class="display-1 mb-3">Flete Marítimo</h1>
-            <p class="lead px-lg-7 px-xl-7 px-xxl-6">El flete marítimo, o transporte marítimo, es uno de los métodos más comunes y rentables para transportar grandes cantidades de mercancías a largas distancias.</p>
+          <div class="col-md-10 col-lg-8 col-xl-7 col-xxl-6 mx-auto">
+            <h1 style="color:white" class="display-1 mb-5 mx-md-10 mx-lg-0">Our platform is effortless and powerful with <br /><span class="typer text-primary text-nowrap" data-delay="100" data-words="easy usage,fast,secure, 24/7"></span><span class="cursor text-primary" data-owner="typer"></span>access</h1>
+            <p class="lead fs-lg mb-7">Achieve your goals. Have all your information, time, tracking, expenses and invoices in one place.</p>
           </div>
           <!-- /column -->
         </div>
@@ -155,102 +158,82 @@
       </div>
       <!-- /.container -->
     </section>
-    <!-- /section -->
-    <section class="wrapper bg-light angled upper-end">
-      <div class="container pb-14 pb-md-16">
-        <div class="row mb-8">
-          <div class="col-12 mt-n20">
-            <figure class="rounded"><img src="./assets/img/photos/oceanfreights2.jpg" srcset="./assets/img/photos/oceanfreights2.jpg 2x" alt="" /></figure>
-            <div class="row">
-              <div class="col-xl-10 mx-auto">
-                <div class="card image-wrapper bg-full bg-image bg-overlay bg-overlay-400 text-white mt-n5 mt-lg-0 mt-lg-n50p mb-lg-n50p border-radius-lg-top" data-image-src="./assets/img/photos/bg3.jpg">
-                  
-                  <!--/.card-body -->
-                </div>
-                <!--/.card -->
-              </div>
-              <!-- /column -->
-            </div>
-            <!-- /.row -->
-          </div>
-          <!-- /column -->
-        </div>
-        <!-- /.row -->
-        <div class="row gx-lg-8 gy-8 mt-5 mt-md-12 mt-lg-0 mb-15 align-items-center">
-          <div class="col-lg-6 order-lg-2">
-            <div class="row gx-md-5 gy-5">
-              <div class="align-self-end">
-                <figure class="rounded"><img src="./assets/img/photos/ocean_routes.png" alt=""></figure>
-              </div>
-              <!--/column -->
-              
-              <!--/column -->
-            </div>
-            <!--/.row -->
-          </div>
-          <!--/column -->
-          <div class="col-lg-6">
-            <h2 class="mb-1">Ventajas Clave del Flete Marítimo</h2>
-            <p class="lead fs-lg mb-8 pe-xxl-2">Rentable para Grandes Volúmenes</p>
-            <div class="row gx-xl-10 gy-6">
-              <div class="col-md-6 col-lg-12 col-xl-6">
-                <div class="d-flex flex-row">
-                  <div>
-                    <div class="icon btn btn-circle btn-lg btn-soft-primary pe-none me-5"> <i class="uil uil-usd-circle"></i> </div>
-                  </div>
-                  <div>
-                    <h4 class="mb-1">Rentable</h4>
-                  </div>
-                </div>
-              </div>
-              <!--/column -->
-              <div class="col-md-6 col-lg-12 col-xl-6">
-                <div class="d-flex flex-row">
-                  <div>
-                    <div class="icon btn btn-circle btn-lg btn-soft-primary pe-none me-5"> <i class="uil uil-globe"></i> </div>
-                  </div>
-                  <div>
-                    <h4 class="mb-1">Alcance Global</h4>
-                  </div>
-                </div>
-              </div>
-              <!--/column -->
-              <div class="col-md-6 col-lg-12 col-xl-6">
-                <div class="d-flex flex-row">
-                  <div>
-                    <div class="icon btn btn-circle btn-lg btn-soft-primary pe-none me-5"> <i class="uil uil-asterisk"></i> </div>
-                  </div>
-                  <div>
-                    <h4 class="mb-1">Opciones de Envío Versátiles</h4>
-                  </div>
-                </div>
-              </div>
-              <!--/column -->
-              <div class="col-md-6 col-lg-12 col-xl-6">
-                <div class="d-flex flex-row">
-                  <div>
-                    <div class="icon btn btn-circle btn-lg btn-soft-primary pe-none me-5"> <i class="uil uil-temperature"></i> </div>
-                  </div>
-                  <div>
-                    <h4 class="mb-1">Impacto Ambiental</h4>
-                  </div>
-                </div>
-              </div>
-              <!--/column -->
-            </div>
-            <!--/.row -->
-          </div>
-          <!--/column -->
-        </div>
-        <!--/.row -->
-        <a href="quote_es.html" class="btn btn-sm btn-primary rounded">Cotiza</a>
-            
-        <!--/.row -->
-      </div>
-      <!-- /.container -->
-    </section>
-    <!-- /section -->
+
     
+    <!-- /section -->
+    <section class="wrapper bg-light">
+      <div class="container py-14 pt-md-17 pb-md-25">
+        
+        <!-- /div -->
+        <div class="row">
+          <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mx-auto text-center">
+            <h2 class="fs-15 text-uppercase text-muted mb-3">Why Choose us?</h2>
+            <h3 class="display-4 mb-10 px-xl-10 px-xxl-15">Here are a few reasons why our customers choose our platform.</h3>
+          </div>
+          <!-- /column -->
+        </div>
+        <!-- /.row -->
+        <ul class="nav nav-tabs nav-tabs-bg nav-tabs-shadow-lg d-flex justify-content-between nav-justified flex-lg-row flex-column">
+          <li class="nav-item"> <a class="nav-link d-flex flex-row active" data-bs-toggle="tab" href="#tab2-1">
+              <div><img src="./assets/img/icons/lineal/rocket.svg" class="svg-inject icon-svg icon-svg-md text-yellow me-4" alt="" /></div>
+              <div>
+                <h4 class="mb-1">Easy Usage</h4>
+                <p>This platform ensures quick onboarding and minimal training, allowing our clients to efficiently manage all the shipments data. Our user-friendly interface save time and reduce errors.</p>
+              </div>
+            </a> </li>
+          <li class="nav-item"> <a class="nav-link d-flex flex-row" data-bs-toggle="tab" href="#tab2-2">
+              <div><img src="./assets/img/icons/lineal/earth.svg" class="svg-inject icon-svg icon-svg-md text-green me-4" alt="" /></div>
+              <div>
+                <h4 class="mb-1">Tracking</h4>
+                <p>Our platform for cargo tracking provides real-time visibility and updates. It also streamlines communication and documentation, leading to improved accuracy and customer satisfaction.</p>
+              </div>
+            </a> </li>
+          <li class="nav-item"> <a class="nav-link d-flex flex-row" data-bs-toggle="tab" href="#tab2-3">
+              <div><img src="./assets/img/icons/lineal/calculator.svg" class="svg-inject icon-svg icon-svg-md text-red me-4" alt="" /></div>
+              <div>
+                <h4 class="mb-1">Reduce Costs</h4>
+                <p>Our technology help to reduces costs by minimizing errors, and optimizing time. Clients can avoid unnecessary expenses, such as demurrage fees or expedited shipping, by having real-time insights into their cargo's location and status.</p>
+              </div>
+            </a> </li>
+        </ul>
+        <!-- /.nav-tabs -->
+        <div class="tab-content mt-6 mt-lg-8 mb-md-9">
+          <div class="tab-pane fade show active" id="tab2-1">
+            <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
+              <div class="col-lg-6">
+                <div class="row gx-md-5 gy-5 align-items-center">
+                  <div class="col-6">
+                    <img class="img-fluid rounded shadow-lg d-flex ms-auto" src="./assets/img/photos/trace3.png" srcset="./assets/img/photos/trace3.png 2x" alt="" />
+                  </div>
+                  <!-- /column -->
+                  <div class="col-6">
+                    <img class="img-fluid rounded shadow-lg mb-5" src="./assets/img/photos/trace1.png" srcset="./assets/img/photos/trace1.png 2x" alt="" />
+                    <img class="img-fluid rounded shadow-lg d-flex col-10" src="./assets/img/photos/trace2.png" srcset="./assets/img/photos/trace2.png 2x" alt="" />
+                  </div>
+                  <!-- /column -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!--/column -->
+              <div class="col-lg-6">
+                <h2 class="mb-3">Easy Usage</h2>
+                <p>Our platform's intuitive design allows users to navigate and access essential features with minimal effort, reducing the need for extensive training. Its straightforward interface, real-time tracking, and easy report generation. This simplicity ensures that both tech-savvy and non-technical users can efficiently manage their shipments, leading to faster adoption and smoother operations.</p>
+                <ul class="icon-list bullet-bg bullet-soft-green">
+                  <li><i class="uil uil-check"></i>The platform is designed for easy navigation, allowing users to quickly access.</li>
+                  <li><i class="uil uil-check"></i>Minimal training is required, allowing our clients to start using the platform efficiently from day one.</li>
+                  <li><i class="uil uil-check"></i>Reduce the chance of errors and save time, improving overall productivity.</li>
+                </ul>
+                <a href="contact.html" class="btn btn-green mt-2">Do you want to know more?</a>
+              </div>
+              <!--/column -->
+            </div>
+            <!--/.row -->
+          </div>
+        </div>
+        <!-- /.tab-content -->
+      </div>
+      <!-- /.container -->
+    </section>
     <!-- /section -->
   </div>
   <!-- /.content-wrapper -->
