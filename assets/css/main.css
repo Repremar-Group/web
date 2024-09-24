@@ -171,7 +171,7 @@ body {
     background: #e5e5e5;
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: open sans;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
 }
 p {
@@ -2218,9 +2218,9 @@ ul.navbar-nav {
 .navbar-brand img{ max-width:210px;}
 
 .div_logo {
-	width: 260px !important; 
+	width: 150px !important; 
 	height:26px !important; 
-	background-size: 260px 26px !important; 
+	background-size: 150px 26px !important; 
 }
 
 .separador {
@@ -2541,10 +2541,10 @@ img.logos_entrada.max120 {
 }
 
 .div_logo {
-	width: 290px; 
+	width: 150px; 
 	height:29px; 
 	background-image:url(../img/basic/logo.png); 
-	background-size: 290px 29px; 
+	background-size: 150px 29px; 
 	padding-right: 15px;   
 	margin-left: 20px; 
 	margin-top: 20px;
