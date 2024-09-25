@@ -13,33 +13,33 @@ require 'PHPMailer/src/SMTP.php';
 */
 
 // Recipients
-$fromEmail = 'from@example.com'; // Email address that will be in the from field of the message.
-$fromName = 'From Name'; // Name that will be in the from field of the message.
-$sendToEmail = 'to@example.com'; // Email address that will receive the message with the output of the form
-$sendToName = 'To Name'; // Name that will receive the message with the output of the form
+$fromEmail = 'alertasrepremar@gmail.com'; // Email address that will be in the from field of the message.
+$fromName = 'Contacto desde la Web de Repremar Logistics'; // Name that will be in the from field of the message.
+$sendToEmail = 'it@repremar.com'; // Email address that will receive the message with the output of the form
+$sendToName = 'Sistemas'; // Name that will receive the message with the output of the form
 
 // Subject
-$subject = 'Message from Sandbox contact form';
+$subject = 'Message from Web Logistics contact form';
 
 // Fields - Value of attribute name => Text to appear in the email
-$fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'department' => 'Department');
+$fields = array('name' => 'Name', 'surname' => 'Surname', 'phone' => 'Phone', 'email' => 'Email', 'message' => 'Message', 'country' => 'Country', 'service' => 'Service');
 
 // Success and error alerts
 $okMessage = 'We have received your inquiry. Stay tuned, we’ll get back to you very soon.';
 $errorMessage = 'There was an error while submitting the form. Please try again later';
 
 // SMTP settings
-$smtpUse = false; // Set to true to enable SMTP authentication
-$smtpHost = ''; // Enter SMTP host ie. smtp.gmail.com
-$smtpUsername = ''; // SMTP username ie. gmail address
-$smtpPassword = ''; // SMTP password ie gmail password
+$smtpUse = true; // Set to true to enable SMTP authentication
+$smtpHost = 'smtp.gmail.com'; // Enter SMTP host ie. smtp.gmail.com
+$smtpUsername = 'alertasrepremar@gmail.com'; // SMTP username ie. gmail address
+$smtpPassword = 'kDE6t)F4M/bt'; // SMTP password ie gmail password
 $smtpSecure = 'tls'; // Enable TLS or SSL encryption
 $smtpAutoTLS = false; // Enable Auto TLS
 $smtpPort = 587; // TCP port to connect to
 
 // reCAPTCHA settings
-$recaptchaUse = false; // Set to true to enable reCAPTHCA
-$recaptchaSecret = 'YOUR_SECRET_KEY'; // enter your secret key from https://www.google.com/recaptcha/admin
+$recaptchaUse = true; // Set to true to enable reCAPTHCA
+$recaptchaSecret = '6LeLlkAqAAAAACHLZwM_jYHK_R98TIPvtURbHtZJ'; // enter your secret key from https://www.google.com/recaptcha/admin
 
 /*
 *  LET'S DO THE SENDING

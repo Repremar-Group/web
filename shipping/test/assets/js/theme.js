@@ -398,6 +398,7 @@ var theme = {
       var sliderMargin = slider1.getAttribute('data-margin') ? slider1.getAttribute('data-margin') : 30;
       var sliderLoop = slider1.getAttribute('data-loop') === 'true';
       var sliderCentered = slider1.getAttribute('data-centered') === 'true';
+      var sliderWatchOverflow = slider1.getAttribute('data-watchoverflow') !== 'false';
       var swiper = slider1.querySelector('.swiper:not(.swiper-thumbs)');
       var swiperTh = slider1.querySelector('.swiper-thumbs');
       var sliderTh = new Swiper(swiperTh, {
@@ -452,6 +453,7 @@ var theme = {
         spaceBetween: Number(sliderMargin),
         effect: sliderEffect,
         autoHeight: sliderAutoHeight,
+        watchOverflow: sliderWatchOverflow,
         grabCursor: true,
         resizeObserver: false,
         updateOnWindowResize: sliderResizeUpdate,
