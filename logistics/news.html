@@ -7,14 +7,23 @@
   <style>
     body {
       margin: 0;
-      background: #fff;
-      overflow-x: hidden;
+      background: #f8f8f8;
+      display: flex;
+      justify-content: center;
+    }
+    #pdf-container {
+      width: 100%;
+      max-width: 900px; /* 🔹 límite de ancho */
+      background: white;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      padding: 20px 0;
     }
     canvas {
       display: block;
-      margin: 0 auto;
+      margin: 0 auto 30px;
       width: 100%;
       height: auto;
+      border-radius: 4px;
     }
   </style>
 </head>
