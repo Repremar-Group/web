@@ -2,22 +2,48 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mi Landing PDF</title>
+  <title>PDF como Landing</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
+      background: #fff;
+      overflow-x: hidden;
     }
-    embed {
+    canvas {
+      display: block;
+      margin: 0 auto;
       width: 100%;
-      height: 100vh;
-      border: none;
+      height: auto;
     }
   </style>
 </head>
 <body>
-  <embed src="newschina.pdf" type="application/pdf">
+  <div id="pdf-container"></div>
+
+  <script>
+    const url = 'https://www.repremar.com/logistics/newchina.pdf'; // tu PDF
+
+    const container = document.getElementById('pdf-container');
+    const loadingTask = pdfjsLib.getDocument(url);
+    loadingTask.promise.then(pdf => {
+      for (let i = 1; i <= pdf.numPages; i++) {
+        pdf.getPage(i).then(page => {
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          container.appendChild(canvas);
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          page.render(renderContext);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
