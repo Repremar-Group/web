@@ -493,13 +493,17 @@
   <script src="./assets/js/theme.js"></script>
 
   <!--ChatKit OpenAi-->
-  <script src="https://cdn.openai.com/chatkit/v1/chat.js"></script>
-  <script>
-    window.ChatKit.mount({
-      workflowId: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40",
-      version: "2", // o quitá esta línea si ya lo pusiste en producción
-      container: document.body, // o un div específico si querés
-      theme: "dark", // "dark" o "light"
+  <script type="module">
+    import ChatKit from "https://cdn.jsdelivr.net/npm/@openai/chatkit@latest/dist/chatkit.min.js";
+
+    window.addEventListener("load", () => {
+      ChatKit.mount({
+        workflowId: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40",
+        version: "2", // o "draft" si querés probar antes
+        theme: "dark",
+        container: document.body,
+        initialMessage: "Para realizar consultas, ingrese su usuario del portal de tracking: usuario / contraseña."
+      });
     });
   </script>
 </body>
