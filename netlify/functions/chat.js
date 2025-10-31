@@ -1,6 +1,8 @@
-const fetch = require("node-fetch");
+// netlify/functions/chat.js
+import fetch from "node-fetch";
+import { Agent, Runner, withTrace, hostedMcpTool } from "@openai/agents";
 
-exports.handler = async (event) => {
+export async function handler(event) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -11,7 +13,6 @@ exports.handler = async (event) => {
 
   try {
     const { message } = JSON.parse(event.body || "{}");
-
     if (!message) {
       return {
         statusCode: 400,
@@ -20,47 +21,55 @@ exports.handler = async (event) => {
       };
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    const workflowId = process.env.WORKFLOW_ID;
-
-    if (!apiKey || !workflowId) {
-      throw new Error("Missing environment variables: OPENAI_API_KEY or WORKFLOW_ID");
-    }
-
-    // ✅ Endpoint correcto para workflows
-    const url = `https://api.openai.com/v1/workflows/${workflowId}/runs`;
-
-    console.log("🛰️ Sending message to OpenAI Workflow:", { workflowId, message });
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        input: { userMessage: message },
-      }),
+    // 🧩 Configuración del agente (idéntica a tu playground)
+    const mcp = hostedMcpTool({
+      serverLabel: "zapier",
+      allowedTools: [
+        "google_sheets_lookup_spreadsheet_rows_advanced",
+        "google_sheets_get_spreadsheet_by_id",
+        "google_sheets_create_spreadsheet_row",
+      ],
+      authorization:
+        '{"expression":"\\"NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OmM4MzA4ZmNjLWE1MjEtNDVmMS1hNTk1LWY1OTBjYmJiNDI3MA==\\"","format":"cel"}',
+      requireApproval: "always",
+      serverDescription: "MCP Sheets",
+      serverUrl: "https://mcp.zapier.com/api/mcp/mcp",
     });
 
-    const data = await response.json();
+    const myAgent = new Agent({
+      name: "Asistente Repremar",
+      instructions: `Sos un asistente virtual. Por ahora, responde siempre:
+"Estamos trabajando para implementar nuestro asistente virtual..."`,
+      model: "gpt-5-nano",
+      tools: [mcp],
+      modelSettings: {
+        reasoning: { effort: "low", summary: "auto" },
+        store: true,
+      },
+    });
 
-    if (!response.ok) {
-      console.error("❌ OpenAI API error:", data);
-      return {
-        statusCode: response.status,
-        headers: { "Access-Control-Allow-Origin": "*" },
-        body: JSON.stringify({ error: "OpenAI API error", detail: data }),
-      };
-    }
+    // 🧠 Ejecutar el agente
+    const runner = new Runner({
+      traceMetadata: {
+        __trace_source__: "agent-builder",
+        workflow_id: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40",
+      },
+    });
 
-    const reply =
-      data.output?.[0]?.content?.[0]?.text ||
-      data.output?.content?.[0]?.text ||
-      JSON.stringify(data.output) ||
-      "Sin respuesta del workflow.";
+    const result = await withTrace("Repremar Agent Run", async () => {
+      const agentResponse = await runner.run(myAgent, [
+        {
+          role: "user",
+          content: [{ type: "input_text", text: message }],
+        },
+      ]);
 
-    console.log("✅ Workflow reply:", reply);
+      if (!agentResponse.finalOutput) {
+        throw new Error("El agente no devolvió salida final");
+      }
+
+      return agentResponse.finalOutput;
+    });
 
     return {
       statusCode: 200,
@@ -68,14 +77,14 @@ exports.handler = async (event) => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reply }),
+      body: JSON.stringify({ reply: result }),
     };
   } catch (err) {
-    console.error("💥 Server Error:", err);
+    console.error("💥 Error en el servidor:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ error: err.message }),
     };
   }
-};
+}
