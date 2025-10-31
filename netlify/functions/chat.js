@@ -3,7 +3,6 @@ const fetch = require("node-fetch");
 const { Agent, Runner, withTrace } = require("@openai/agents");
 
 exports.handler = async function (event) {
-  // Solo permitimos POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -13,7 +12,7 @@ exports.handler = async function (event) {
   }
 
   try {
-    const { message } = JSON.parse(event.body || "{}");
+    const { message, history = [] } = JSON.parse(event.body || "{}");
     if (!message) {
       return {
         statusCode: 400,
@@ -22,11 +21,10 @@ exports.handler = async function (event) {
       };
     }
 
-    // 🧠 Definición simple del agente
     const myAgent = new Agent({
       name: "Asistente Repremar",
       instructions: `Sos un asistente virtual de Repremar Logistics.
-Por ahora solo tenes que hacer la cuenta que te manden y devolver el resultado`,
+Podés recordar las operaciones anteriores en esta conversación si te las pasan.`,
       model: "gpt-5-nano",
       modelSettings: {
         reasoning: { effort: "low", summary: "auto" },
@@ -34,7 +32,6 @@ Por ahora solo tenes que hacer la cuenta que te manden y devolver el resultado`,
       }
     });
 
-    // 🚀 Ejecutamos el agente con el mensaje recibido
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
@@ -42,32 +39,29 @@ Por ahora solo tenes que hacer la cuenta que te manden y devolver el resultado`,
       }
     });
 
+    // Construimos el historial
+    const conversation = [
+      ...history.map(msg => ({
+        role: msg.role,
+        content: [{ type: "input_text", text: msg.text }]
+      })),
+      { role: "user", content: [{ type: "input_text", text: message }] }
+    ];
+
     const result = await withTrace("Repremar Agent Run", async () => {
-      const agentResponse = await runner.run(myAgent, [
-        {
-          role: "user",
-          content: [{ type: "input_text", text: message }]
-        }
-      ]);
-
-      if (!agentResponse.finalOutput) {
-        throw new Error("El agente no devolvió salida final");
-      }
-
+      const agentResponse = await runner.run(myAgent, conversation);
+      if (!agentResponse.finalOutput) throw new Error("Sin salida final del agente");
       return agentResponse.finalOutput;
     });
 
-    // ✨ Devolvemos la respuesta al frontend
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ reply: result })
     };
+
   } catch (err) {
-    console.error("💥 Error en el servidor:", err);
+    console.error("💥 Error:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },

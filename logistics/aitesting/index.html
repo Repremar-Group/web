@@ -661,13 +661,20 @@
     const input = document.getElementById("chatkit-input");
     const messages = document.getElementById("chatkit-messages");
     const sendBtn = document.getElementById("chatkit-send");
+
     let threadId = null;
+    let conversationHistory = [];
 
-    // Abrir/cerrar chat
-    chatBubble.onclick = () => {
-      chatWrapper.classList.toggle("open");
-    };
+    // 🧠 Restaurar conversación al cargar la página
+    window.addEventListener("load", () => {
+      const saved = localStorage.getItem("repremar_chat_history");
+      if (saved) {
+        conversationHistory = JSON.parse(saved);
+        conversationHistory.forEach(msg => appendMessage(msg.text, msg.role === "user" ? "user" : "bot"));
+      }
+    });
 
+    // 💬 Mostrar mensaje en el chat
     function appendMessage(text, from = "bot") {
       const div = document.createElement("div");
       div.className = from === "user" ? "msg-user" : "msg-bot";
@@ -676,31 +683,51 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
+    // 🚀 Enviar mensaje al servidor
     async function sendMessage() {
       const text = input.value.trim();
       if (!text) return;
+
       appendMessage(text, "user");
+      conversationHistory.push({ role: "user", text });
       input.value = "";
 
       appendMessage("…", "bot");
+
       try {
         const res = await fetch("/.netlify/functions/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, thread_id: threadId })
+          body: JSON.stringify({
+            message: text,
+            history: conversationHistory.slice(-10), // últimas 10 interacciones
+            thread_id: threadId
+          })
         });
 
         const data = await res.json();
-        messages.lastChild.textContent = data.reply || "Error obteniendo respuesta";
+        const reply = data.reply || "Error obteniendo respuesta";
+
+        messages.lastChild.textContent = reply;
+        conversationHistory.push({ role: "assistant", text: reply });
+        localStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
+
         if (data.thread_id) threadId = data.thread_id;
       } catch (e) {
         messages.lastChild.textContent = "⚠️ Error de conexión";
       }
     }
 
+    // 🟢 Enviar mensaje con Enter o click
     sendBtn.onclick = sendMessage;
     input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+
+    // 💭 Abrir/cerrar chat
+    chatBubble.onclick = () => {
+      chatWrapper.classList.toggle("open");
+    };
   </script>
+
 
 
 </body>
