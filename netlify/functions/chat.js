@@ -1,8 +1,9 @@
 // netlify/functions/chat.js
 const fetch = require("node-fetch");
-const { Agent, Runner, withTrace, hostedMcpTool } = require("@openai/agents");
+const { Agent, Runner, withTrace } = require("@openai/agents");
 
 exports.handler = async function (event) {
+  // Solo permitimos POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -21,46 +22,33 @@ exports.handler = async function (event) {
       };
     }
 
-    // 🔧 Configuración del agente (idéntico a tu código original)
-    const mcp = hostedMcpTool({
-      serverLabel: "zapier",
-      allowedTools: [
-        "google_sheets_lookup_spreadsheet_rows_advanced",
-        "google_sheets_get_spreadsheet_by_id",
-        "google_sheets_create_spreadsheet_row",
-      ],
-      authorization:
-        '{"expression":"\\"NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OjQ3YTZiMzkyLTg3N2ItNDhlOS1iNDliLTM3YWFjODgyZGVhNA==\\"","format":"cel"}',
-      requireApproval: "always",
-      serverDescription: "MCP Sheets",
-      serverUrl: "https://mcp.zapier.com/api/mcp/mcp",
-    });
-
+    // 🧠 Definición simple del agente
     const myAgent = new Agent({
       name: "Asistente Repremar",
-      instructions: `Sos un asistente virtual. Por ahora, responde siempre:
+      instructions: `Sos un asistente virtual de Repremar Logistics.
+Por ahora, respondé siempre con el siguiente mensaje:
 "Estamos trabajando para implementar nuestro asistente virtual..."`,
       model: "gpt-5-nano",
-      tools: [mcp],
       modelSettings: {
         reasoning: { effort: "low", summary: "auto" },
-        store: true,
-      },
+        store: false
+      }
     });
 
+    // 🚀 Ejecutamos el agente con el mensaje recibido
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
-        workflow_id: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40",
-      },
+        workflow_id: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40"
+      }
     });
 
     const result = await withTrace("Repremar Agent Run", async () => {
       const agentResponse = await runner.run(myAgent, [
         {
           role: "user",
-          content: [{ type: "input_text", text: message }],
-        },
+          content: [{ type: "input_text", text: message }]
+        }
       ]);
 
       if (!agentResponse.finalOutput) {
@@ -70,20 +58,21 @@ exports.handler = async function (event) {
       return agentResponse.finalOutput;
     });
 
+    // ✨ Devolvemos la respuesta al frontend
     return {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ reply: result }),
+      body: JSON.stringify({ reply: result })
     };
   } catch (err) {
     console.error("💥 Error en el servidor:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
