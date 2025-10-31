@@ -492,20 +492,141 @@
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/theme.js"></script>
 
-  <!--ChatKit OpenAi-->
-  <script type="module">
-    import ChatKit from "https://cdn.jsdelivr.net/npm/@openai/chatkit@latest/dist/chatkit.min.js";
+  <!-- ChatKit-style custom chat powered by Netlify + OpenAI -->
+  <link rel="preconnect" href="https://cdn.openai.com">
+  <link rel="stylesheet" href="https://cdn.openai.com/common/fonts/openai-sans/v2/openai-sans.css">
 
-    window.addEventListener("load", () => {
-      ChatKit.mount({
-        workflowId: "wf_6904f825047481909f36198a0a2a269d0687102ba226cd40",
-        version: "2", // o "draft" si querés probar antes
-        theme: "dark",
-        container: document.body,
-        initialMessage: "Para realizar consultas, ingrese su usuario del portal de tracking: usuario / contraseña."
+  <style>
+    /* ChatKit-like layout */
+    #chatkit-wrapper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 380px;
+      height: 540px;
+      background: #111;
+      color: #f1f1f1;
+      border-radius: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+      font-family: "OpenAI Sans", system-ui, sans-serif;
+    }
+
+    #chatkit-header {
+      background: linear-gradient(90deg, #0b5fff, #0040ff);
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      padding: 12px;
+      letter-spacing: .5px;
+    }
+
+    #chatkit-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .msg-user,
+    .msg-bot {
+      max-width: 85%;
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .msg-user {
+      background: #0b5fff;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
+
+    .msg-bot {
+      background: #222;
+      color: #eee;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+    }
+
+    #chatkit-inputbox {
+      display: flex;
+      border-top: 1px solid #333;
+    }
+
+    #chatkit-input {
+      flex: 1;
+      border: none;
+      background: #111;
+      color: #eee;
+      padding: 10px 14px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    #chatkit-send {
+      background: #0b5fff;
+      border: none;
+      color: #fff;
+      padding: 0 18px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+
+  <div id="chatkit-wrapper">
+    <div id="chatkit-header">Repremar Virtual Assistant</div>
+    <div id="chatkit-messages">
+      <div class="msg-bot">👋 Coming soon...<br>Para realizar consultas, ingrese su usuario del portal de tracking.
+      </div>
+    </div>
+    <div id="chatkit-inputbox">
+      <input id="chatkit-input" placeholder="Ingresa tus credenciales del portal clientes" />
+      <button id="chatkit-send">➤</button>
+    </div>
+  </div>
+
+  <script>
+    let threadId = null;
+    const input = document.getElementById("chatkit-input");
+    const messages = document.getElementById("chatkit-messages");
+
+    function appendMessage(text, from = "bot") {
+      const div = document.createElement("div");
+      div.className = from === "user" ? "msg-user" : "msg-bot";
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage(text, "user");
+      input.value = "";
+
+      appendMessage("…", "bot");
+      const res = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, thread_id: threadId })
       });
-    });
+      const data = await res.json();
+      messages.lastChild.textContent = data.reply || "Error obteniendo respuesta";
+      if (data.thread_id) threadId = data.thread_id;
+    }
+
+    document.getElementById("chatkit-send").onclick = sendMessage;
+    input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
   </script>
+
+
 </body>
 
 </html>
