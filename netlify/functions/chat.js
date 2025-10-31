@@ -1,8 +1,8 @@
 // netlify/functions/chat.js
 
-import fetch from "node-fetch"; // 👈 Importamos fetch manualmente
+const fetch = require("node-fetch"); // 👈 CommonJS require, no import
 
-export async function handler(event) {
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -60,4 +60,24 @@ export async function handler(event) {
       data.output?.[0]?.content?.[0]?.text ||
       data.output?.content?.[0]?.text ||
       data.output?.[0]?.content?.text ||
-      "Sin respuesta del agent
+      "Sin respuesta del agente.";
+
+    console.log("✅ Agent reply:", reply);
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ reply }),
+    };
+  } catch (err) {
+    console.error("💥 Server Error:", err);
+    return {
+      statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: err.message }),
+    };
+  }
+};
