@@ -24,6 +24,10 @@ export async function handler(event) {
     // ✅ Nuevo endpoint para Workflows
     const url = `https://api.openai.com/v1/workflows/${workflowId}/runs`;
 
+    console.log("Enviando a OpenAI con workflowId:", workflowId);
+    console.log("Mensaje:", message);
+
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -62,6 +66,8 @@ export async function handler(event) {
     };
   } catch (err) {
     console.error("Server Error:", err);
+    console.error("Full error:", err);
+
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message }),
