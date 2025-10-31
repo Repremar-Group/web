@@ -1,8 +1,8 @@
 // netlify/functions/chat.js
-import fetch from "node-fetch";
-import { Agent, Runner, withTrace, hostedMcpTool } from "@openai/agents";
+const fetch = require("node-fetch");
+const { Agent, Runner, withTrace, hostedMcpTool } = require("@openai/agents");
 
-export async function handler(event) {
+exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -21,7 +21,7 @@ export async function handler(event) {
       };
     }
 
-    // 🧩 Configuración del agente (idéntica a tu playground)
+    // 🔧 Configuración del agente (idéntico a tu código original)
     const mcp = hostedMcpTool({
       serverLabel: "zapier",
       allowedTools: [
@@ -48,7 +48,6 @@ export async function handler(event) {
       },
     });
 
-    // 🧠 Ejecutar el agente
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
@@ -87,4 +86,4 @@ export async function handler(event) {
       body: JSON.stringify({ error: err.message }),
     };
   }
-}
+};
