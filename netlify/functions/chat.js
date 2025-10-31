@@ -1,6 +1,4 @@
-// netlify/functions/chat.js
-
-const fetch = require("node-fetch"); // 👈 CommonJS require, no import
+const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -23,15 +21,16 @@ exports.handler = async (event) => {
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
-    const agentId = process.env.WORKFLOW_ID;
+    const workflowId = process.env.WORKFLOW_ID;
 
-    if (!apiKey || !agentId) {
+    if (!apiKey || !workflowId) {
       throw new Error("Missing environment variables: OPENAI_API_KEY or WORKFLOW_ID");
     }
 
-    const url = "https://api.openai.com/v1/agents/runs";
+    // ✅ Endpoint correcto para workflows
+    const url = `https://api.openai.com/v1/workflows/${workflowId}/runs`;
 
-    console.log("🛰️ Sending message to OpenAI:", { agentId, message });
+    console.log("🛰️ Sending message to OpenAI Workflow:", { workflowId, message });
 
     const response = await fetch(url, {
       method: "POST",
@@ -40,8 +39,7 @@ exports.handler = async (event) => {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        agent_id: agentId,
-        input: message,
+        input: { userMessage: message },
       }),
     });
 
@@ -59,10 +57,10 @@ exports.handler = async (event) => {
     const reply =
       data.output?.[0]?.content?.[0]?.text ||
       data.output?.content?.[0]?.text ||
-      data.output?.[0]?.content?.text ||
-      "Sin respuesta del agente.";
+      JSON.stringify(data.output) ||
+      "Sin respuesta del workflow.";
 
-    console.log("✅ Agent reply:", reply);
+    console.log("✅ Workflow reply:", reply);
 
     return {
       statusCode: 200,
