@@ -25,31 +25,40 @@ exports.handler = async function (event) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY no configurada en Netlify.");
 
-    // 💬 Armar historial de conversación en formato OpenAI
+    // 🧠 Instrucciones del asistente
+    const systemInstruction = {
+      role: "system",
+      content: `Sos un asistente virtual de Repremar Logistics.
+Tu única función es resolver operaciones matemáticas básicas (sumas, restas, multiplicaciones, divisiones).
+Si te preguntan cualquier otra cosa, respondé amablemente:
+"No estoy programado para responder eso."`,
+    };
+
+    // 💬 Armar historial completo
     const messages = [
-      ...history.map(msg => ({
+      systemInstruction,
+      ...history.map((msg) => ({
         role: msg.role === "assistant" ? "assistant" : "user",
         content: msg.text,
       })),
       { role: "user", content: message },
     ];
 
-    // 🚀 Llamada directa a OpenAI REST API
+    // 🚀 Llamada a OpenAI
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // 🔁 estable y económico
+        model: "gpt-4o-mini", // estable y económico
         messages,
-        temperature: 0.7,
+        temperature: 0.3, // más preciso para cálculos
       }),
     });
 
     const data = await response.json();
-
     console.log("📤 Respuesta de OpenAI:", JSON.stringify(data, null, 2));
 
     if (!response.ok) {
@@ -70,7 +79,6 @@ exports.handler = async function (event) {
       },
       body: JSON.stringify({ reply }),
     };
-
   } catch (err) {
     console.error("💥 Error en función:", err);
     return {
