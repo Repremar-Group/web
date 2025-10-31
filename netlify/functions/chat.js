@@ -3,7 +3,6 @@ const fetch = require("node-fetch");
 const { Agent, Runner, withTrace } = require("@openai/agents");
 
 exports.handler = async function (event) {
-  // Solo permitimos POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -13,7 +12,8 @@ exports.handler = async function (event) {
   }
 
   try {
-    const { message, history = [] } = JSON.parse(event.body || "{}");
+    const body = JSON.parse(event.body || "{}");
+    const { message, history = [] } = body;
 
     if (!message) {
       return {
@@ -23,19 +23,19 @@ exports.handler = async function (event) {
       };
     }
 
-    // 🧠 Definición del agente
+    // 🧠 Crear el agente
     const myAgent = new Agent({
       name: "Asistente Repremar",
-      instructions: `Sos un asistente virtual de Repremar Logistics.
-Podés recordar las operaciones anteriores de esta conversación para mantener contexto y continuidad.`,
-      model: "gpt-5-nano",
+      instructions: `Sos el asistente virtual de Repremar Logistics.
+Recordá las operaciones anteriores si se te pasan en la conversación.`,
+      model: "gpt-4o-mini", // 🔁 más estable que gpt-5-nano en serverless
       modelSettings: {
         reasoning: { effort: "low", summary: "auto" },
         store: false,
       },
     });
 
-    // 🧩 Inicializamos el runner
+    // ⚙️ Runner
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
@@ -43,43 +43,48 @@ Podés recordar las operaciones anteriores de esta conversación para mantener c
       },
     });
 
-    // 💬 Armamos el historial completo de conversación
+    // 💬 Armar historial de conversación
     const conversation = [
-      ...history.map(msg => ({
+      ...history.map((msg) => ({
         role: msg.role,
         content: [{ type: "input_text", text: msg.text }],
       })),
       { role: "user", content: [{ type: "input_text", text: message }] },
     ];
 
-    // 🚀 Ejecutamos el agente
-    const result = await withTrace("Repremar Agent Run", async () => {
-      const response = await runner.run(myAgent, conversation);
-
-      if (!response) throw new Error("No se recibió respuesta del modelo.");
-
-      // 🧠 Aseguramos que se devuelva texto aunque la estructura cambie
-      const output =
-        response.finalOutput ||
-        response.output_text ||
-        response.output ||
-        response.toString();
-
-      return output;
+    // 🚀 Ejecutar el agente
+    const response = await withTrace("Repremar Agent Run", async () => {
+      return await runner.run(myAgent, conversation);
     });
 
-    // ✨ Devolvemos la respuesta al frontend
+    console.log("📤 Respuesta bruta del modelo:", JSON.stringify(response, null, 2));
+
+    // 🔍 Aseguramos que la respuesta siempre sea texto
+    let reply =
+      response?.finalOutput ||
+      response?.output_text ||
+      response?.output ||
+      "Sin respuesta del agente.";
+
+    if (typeof reply !== "string") {
+      try {
+        reply = JSON.stringify(reply);
+      } catch {
+        reply = "⚠️ Error interpretando respuesta del modelo.";
+      }
+    }
+
+    // ✨ Enviar resultado
     return {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reply: result }),
+      body: JSON.stringify({ reply }),
     };
-
   } catch (err) {
-    console.error("💥 Error interno del agente:", err);
+    console.error("💥 Error interno:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
