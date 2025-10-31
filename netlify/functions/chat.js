@@ -30,7 +30,7 @@ exports.handler = async function (event) {
         "google_sheets_create_spreadsheet_row",
       ],
       authorization:
-        '{"expression":"\\"NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OmM4MzA4ZmNjLWE1MjEtNDVmMS1hNTk1LWY1OTBjYmJiNDI3MA==\\"","format":"cel"}',
+        '{"expression":"\\"NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OjQ3YTZiMzkyLTg3N2ItNDhlOS1iNDliLTM3YWFjODgyZGVhNA==\\"","format":"cel"}',
       requireApproval: "always",
       serverDescription: "MCP Sheets",
       serverUrl: "https://mcp.zapier.com/api/mcp/mcp",
