@@ -492,28 +492,36 @@
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/theme.js"></script>
 
-  <!-- ChatKit-style custom chat powered by Netlify + OpenAI -->
+  <!-- Chat Widget Repremar -->
   <link rel="preconnect" href="https://cdn.openai.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ChatKit-like layout */
+    /* --- Estilos generales --- */
     #chatkit-wrapper {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 90px;
+      right: 25px;
       width: 380px;
       height: 540px;
       background: #111;
       color: #f1f1f1;
       border-radius: 30px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
-      display: flex;
+      display: none;
       flex-direction: column;
       overflow: hidden;
       z-index: 9999;
       font-family: 'Inter', system-ui, sans-serif;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
 
+    #chatkit-wrapper.open {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
     }
 
     #chatkit-header {
@@ -579,8 +587,55 @@
       cursor: pointer;
       font-size: 16px;
     }
+
+    /* --- Burbuja flotante --- */
+    #chatkit-bubble {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #0b5fff, #0040ff);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(11, 95, 255, 0.4);
+      cursor: pointer;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    #chatkit-bubble:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(11, 95, 255, 0.7);
+    }
+
+    #chatkit-bubble svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
+
+    /* Animación de aparición */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #chatkit-wrapper.open {
+      animation: fadeIn 0.3s ease forwards;
+    }
   </style>
 
+  <!-- Chat Widget -->
   <div id="chatkit-wrapper">
     <div id="chatkit-header">Repremar Virtual Assistant</div>
     <div id="chatkit-messages">
@@ -593,10 +648,25 @@
     </div>
   </div>
 
+  <!-- Burbuja flotante -->
+  <div id="chatkit-bubble" title="Abrir chat">
+    <svg viewBox="0 0 24 24">
+      <path d="M20 2H4C2.897 2 2 2.897 2 4v18l4-4h14c1.103 0 2-.897 2-2V4C22 2.897 21.103 2 20 2z"></path>
+    </svg>
+  </div>
+
   <script>
-    let threadId = null;
+    const chatWrapper = document.getElementById("chatkit-wrapper");
+    const chatBubble = document.getElementById("chatkit-bubble");
     const input = document.getElementById("chatkit-input");
     const messages = document.getElementById("chatkit-messages");
+    const sendBtn = document.getElementById("chatkit-send");
+    let threadId = null;
+
+    // Abrir/cerrar chat
+    chatBubble.onclick = () => {
+      chatWrapper.classList.toggle("open");
+    };
 
     function appendMessage(text, from = "bot") {
       const div = document.createElement("div");
@@ -613,17 +683,22 @@
       input.value = "";
 
       appendMessage("…", "bot");
-      const res = await fetch("/.netlify/functions/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, thread_id: threadId })
-      });
-      const data = await res.json();
-      messages.lastChild.textContent = data.reply || "Error obteniendo respuesta";
-      if (data.thread_id) threadId = data.thread_id;
+      try {
+        const res = await fetch("/.netlify/functions/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, thread_id: threadId })
+        });
+
+        const data = await res.json();
+        messages.lastChild.textContent = data.reply || "Error obteniendo respuesta";
+        if (data.thread_id) threadId = data.thread_id;
+      } catch (e) {
+        messages.lastChild.textContent = "⚠️ Error de conexión";
+      }
     }
 
-    document.getElementById("chatkit-send").onclick = sendMessage;
+    sendBtn.onclick = sendMessage;
     input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
   </script>
 
