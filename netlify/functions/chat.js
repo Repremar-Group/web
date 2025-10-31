@@ -1,7 +1,8 @@
 // netlify/functions/chat.js
 
+import fetch from "node-fetch"; // 👈 Importamos fetch manualmente
+
 export async function handler(event) {
-  // Solo permitimos POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -21,14 +22,16 @@ export async function handler(event) {
       };
     }
 
-    // 🔐 Variables de entorno en Netlify
     const apiKey = process.env.OPENAI_API_KEY;
-    const agentId = process.env.WORKFLOW_ID; // Usamos workflow ID como agent ID
+    const agentId = process.env.WORKFLOW_ID;
 
-    // 📡 Endpoint correcto para Agents API
+    if (!apiKey || !agentId) {
+      throw new Error("Missing environment variables: OPENAI_API_KEY or WORKFLOW_ID");
+    }
+
     const url = "https://api.openai.com/v1/agents/runs";
 
-    console.log("🛰️ Enviando a OpenAI:", { agentId, message });
+    console.log("🛰️ Sending message to OpenAI:", { agentId, message });
 
     const response = await fetch(url, {
       method: "POST",
@@ -38,7 +41,7 @@ export async function handler(event) {
       },
       body: JSON.stringify({
         agent_id: agentId,
-        input: message, // 👈 formato correcto para agents
+        input: message,
       }),
     });
 
@@ -49,38 +52,12 @@ export async function handler(event) {
       return {
         statusCode: response.status,
         headers: { "Access-Control-Allow-Origin": "*" },
-        body: JSON.stringify({
-          error: "OpenAI API error",
-          detail: data,
-        }),
+        body: JSON.stringify({ error: "OpenAI API error", detail: data }),
       };
     }
 
-    // 🧠 Buscar respuesta del agente
     const reply =
       data.output?.[0]?.content?.[0]?.text ||
       data.output?.content?.[0]?.text ||
       data.output?.[0]?.content?.text ||
-      "Sin respuesta del agente.";
-
-    console.log("✅ Respuesta del agente:", reply);
-
-    // ✨ Devolvemos resultado al frontend
-    return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ reply }),
-    };
-  } catch (err) {
-    console.error("💥 Server Error:", err);
-
-    return {
-      statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: err.message }),
-    };
-  }
-}
+      "Sin respuesta del agent
