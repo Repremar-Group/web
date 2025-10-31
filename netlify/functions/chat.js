@@ -26,8 +26,7 @@ exports.handler = async function (event) {
     const myAgent = new Agent({
       name: "Asistente Repremar",
       instructions: `Sos un asistente virtual de Repremar Logistics.
-Por ahora, respondé siempre con el siguiente mensaje:
-"Estamos trabajando para implementar nuestro asistente virtual..."`,
+Por ahora solo tenes que hacer la cuenta que te manden y devolver el resultado`,
       model: "gpt-5-nano",
       modelSettings: {
         reasoning: { effort: "low", summary: "auto" },
