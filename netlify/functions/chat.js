@@ -23,13 +23,13 @@ exports.handler = async function (event) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY no configurada en Netlify.");
 
-    // 🧠 Instrucciones iniciales
+    // 🧠 Instrucciones base
     const systemPrompt = `Sos un asistente virtual de Repremar Logistics.
 Podés acceder a herramientas externas mediante un servidor MCP de Zapier.
 Usá esas herramientas cuando el usuario solicite datos o acciones que dependan de información de planillas, automatizaciones o integraciones externas.
 Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trabajo es buscar esa carga por el campo ID de el GoogleSheet que se llama MakeTest y traer esa informacion. La columna del ID es la AG.`;
 
-    // ⚙️ Configuración del servidor MCP (Zapier)
+    // ⚙️ Configurar el servidor MCP (Zapier)
     const zapierMCP = {
       type: "mcp",
       server_label: "zapier",
@@ -41,7 +41,7 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
       },
     };
 
-    // 🚀 Llamada a la nueva API de Responses
+    // 🚀 Request al endpoint /v1/responses
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -50,7 +50,6 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
       },
       body: JSON.stringify({
         model: "gpt-4.1",
-        // Usamos `input` en lugar de `messages` (no ambos)
         input: [
           { role: "system", content: systemPrompt },
           ...history.map((m) => ({
@@ -66,21 +65,35 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
     });
 
     const data = await response.json();
-    console.log("📤 Respuesta OpenAI:", JSON.stringify(data, null, 2));
+
+    // 🧩 Log de depuración — verás esto en Netlify logs
+    console.log("📥 RAW OpenAI response:");
+    console.log(JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       return {
         statusCode: response.status,
         headers: { "Access-Control-Allow-Origin": "*" },
-        body: JSON.stringify({ error: data.error || "Error en OpenAI API" }),
+        body: JSON.stringify({
+          error: data.error || "Error en OpenAI API",
+          raw: data,
+        }),
       };
     }
 
-    // 🗨️ Obtener respuesta del modelo
-    let reply = "Sin respuesta del modelo.";
-    const output = data.output?.[0]?.content;
-    if (Array.isArray(output) && output[0]?.text) reply = output[0].text;
-    else if (data.output_text) reply = data.output_text;
+    // 🗨️ Extraer texto de salida
+    let reply = data.output_text || "Sin respuesta del modelo.";
+
+    // Si el modelo intentó hacer tool_call y no devolvió texto
+    if (!reply && data.output?.[0]?.content) {
+      const content = data.output[0].content;
+      if (Array.isArray(content) && content[0]?.text) reply = content[0].text;
+    }
+
+    // Si sigue sin texto, mostramos el objeto completo (para debug)
+    if (!reply || reply.trim() === "") {
+      reply = "⚙️ Sin texto. Mira logs para más info.";
+    }
 
     return {
       statusCode: 200,
@@ -95,7 +108,7 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: err.message, stack: err.stack }),
     };
   }
 };
