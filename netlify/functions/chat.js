@@ -12,7 +12,6 @@ exports.handler = async function (event) {
 
   try {
     const { message, history = [] } = JSON.parse(event.body || "{}");
-
     if (!message) {
       return {
         statusCode: 400,
@@ -21,20 +20,19 @@ exports.handler = async function (event) {
       };
     }
 
-    // 🔐 API Key
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY no configurada en Netlify.");
 
-    // 🧠 Instrucciones del asistente
+    // 🧠 Instrucciones iniciales
     const systemInstruction = {
       role: "system",
       content: `Sos un asistente virtual de Repremar Logistics.
-Tu única función es resolver operaciones matemáticas básicas (sumas, restas, multiplicaciones, divisiones).
-Si te preguntan cualquier otra cosa, respondé amablemente:
-"No estoy programado para responder eso."`,
+Podés acceder a herramientas externas mediante un servidor MCP de Zapier.
+Usá esas herramientas cuando el usuario solicite datos o acciones que dependan de información de planillas, automatizaciones o integraciones externas.
+Cuando se te consulta por una carga o referenca tu trabajo es buscar la linea de esa carga en el sheet MakeTest y devolver sus datos.`,
     };
 
-    // 💬 Armar historial completo
+    // 💬 Construir historial
     const messages = [
       systemInstruction,
       ...history.map((msg) => ({
@@ -44,17 +42,32 @@ Si te preguntan cualquier otra cosa, respondé amablemente:
       { role: "user", content: message },
     ];
 
-    // 🚀 Llamada a OpenAI
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    // ⚙️ Definir el MCP server (Zapier)
+    const zapierMCP = {
+      type: "mcp",
+      server_label: "zapier",
+      server_url: "https://mcp.zapier.com/api/mcp/mcp",
+      require_approval: "never",
+      headers: {
+        Authorization:
+          "Bearer NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OjljNDBhY2FkLWQ4NDYtNDQzZi04OTI3LWE5MzZiZDhhODYyNg==",
+      },
+    };
+
+    // 🚀 Llamada a la nueva API de respuestas con herramientas MCP
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // estable y económico
+        model: "gpt-4.1", // el modelo compatible con tools/MCP
+        input: message,
+        tools: [zapierMCP],
+        tool_choice: "auto", // puede ser "auto" o "required" si querés forzar el uso
+        temperature: 0.3,
         messages,
-        temperature: 0.3, // más preciso para cálculos
       }),
     });
 
@@ -69,7 +82,11 @@ Si te preguntan cualquier otra cosa, respondé amablemente:
       };
     }
 
-    const reply = data.choices?.[0]?.message?.content?.trim() || "Sin respuesta del modelo.";
+    // 🗨️ El texto final que responde el modelo
+    const reply =
+      data.output?.[0]?.content?.[0]?.text ||
+      data.choices?.[0]?.message?.content?.trim() ||
+      "Sin respuesta del modelo.";
 
     return {
       statusCode: 200,
