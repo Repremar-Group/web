@@ -26,7 +26,8 @@ exports.handler = async function (event) {
     // 🧠 Instrucciones iniciales
     const systemPrompt = `Sos un asistente virtual de Repremar Logistics.
 Podés acceder a herramientas externas mediante un servidor MCP de Zapier.
-Usá esas herramientas cuando el usuario solicite datos o acciones que dependan de información de planillas, automatizaciones o integraciones externas.`;
+Usá esas herramientas cuando el usuario solicite datos o acciones que dependan de información de planillas, automatizaciones o integraciones externas.
+Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trabajo es buscar esa carga por el campo ID de el GoogleSheet que se llama MakeTest y traer esa informacion. La columna del ID es la AG.`;
 
     // ⚙️ Configuración del servidor MCP (Zapier)
     const zapierMCP = {
