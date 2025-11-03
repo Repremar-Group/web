@@ -23,11 +23,11 @@ exports.handler = async function (event) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("OPENAI_API_KEY no configurada en Netlify.");
 
-    // 🧠 Instrucciones base
-    const systemPrompt = `Sos un asistente virtual de Repremar Logistics.
-Podés acceder a herramientas externas mediante un servidor MCP de Zapier.
-Usá esas herramientas cuando el usuario solicite datos o acciones que dependan de información de planillas, automatizaciones o integraciones externas.
-Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trabajo es buscar esa carga por el campo ID de el GoogleSheet que se llama MakeTest y traer esa informacion. La columna del ID es la AG.`;
+    // 🧠 Prompt base
+    const systemPrompt = `Sos el asistente virtual de Repremar Logistics.
+Tenés acceso a un servidor MCP de Zapier.
+Usá esas herramientas cuando el usuario solicite información o acciones que dependan de datos externos, como planillas de Google Sheets o integraciones automáticas.
+Cuando te pidan información sobre una carga, escala o referencia, buscá en el Google Sheet "MakeTest" la fila cuyo campo ID (columna AG) coincida con el valor solicitado, y devolvé un resumen profesional.`;
 
     // ⚙️ Configurar el servidor MCP (Zapier)
     const zapierMCP = {
@@ -41,7 +41,7 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
       },
     };
 
-    // 🚀 Request al endpoint /v1/responses
+    // 🚀 Llamada a OpenAI Responses API
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -66,10 +66,11 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
 
     const data = await response.json();
 
-    // 🧩 Log de depuración — verás esto en Netlify logs
+    // 📜 Log de depuración
     console.log("📥 RAW OpenAI response:");
     console.log(JSON.stringify(data, null, 2));
 
+    // ⚠️ Manejo de errores HTTP
     if (!response.ok) {
       return {
         statusCode: response.status,
@@ -81,19 +82,30 @@ Puntualmente, cuando te soliciten informacion de una carga o referencia, tu trab
       };
     }
 
-    // 🗨️ Extraer texto de salida
-    let reply = data.output_text || "Sin respuesta del modelo.";
+    // 🗨️ Extraer texto de salida del modelo (robusto)
+    let reply = "Sin respuesta del modelo.";
 
-    // Si el modelo intentó hacer tool_call y no devolvió texto
-    if (!reply && data.output?.[0]?.content) {
-      const content = data.output[0].content;
-      if (Array.isArray(content) && content[0]?.text) reply = content[0].text;
+    // 1️⃣ Intentar output_text directo
+    if (data.output_text && data.output_text.trim()) {
+      reply = data.output_text.trim();
     }
 
-    // Si sigue sin texto, mostramos el objeto completo (para debug)
+    // 2️⃣ Buscar dentro de la estructura de output
+    else if (Array.isArray(data.output)) {
+      for (const chunk of data.output) {
+        if (chunk.type === "message" && chunk.content?.[0]?.text) {
+          reply = chunk.content[0].text.trim();
+          break;
+        }
+      }
+    }
+
+    // 3️⃣ Seguridad final
     if (!reply || reply.trim() === "") {
-      reply = "⚙️ Sin texto. Mira logs para más info.";
+      reply = "⚙️ Sin texto disponible del modelo (ver logs).";
     }
+
+    console.log("➡️ Reply enviado:", reply);
 
     return {
       statusCode: 200,
