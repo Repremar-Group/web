@@ -667,7 +667,7 @@
 
     // 🧠 Restaurar conversación al cargar la página
     window.addEventListener("load", () => {
-      const saved = localStorage.getItem("repremar_chat_history");
+      const saved = sessionStorage.getItem("repremar_chat_history");
       if (saved) {
         conversationHistory = JSON.parse(saved);
         conversationHistory.forEach(msg => appendMessage(msg.text, msg.role === "user" ? "user" : "bot"));
@@ -748,7 +748,7 @@
         }
 
         conversationHistory.push({ role: "assistant", text: replyText });
-        localStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
+        sessionStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
 
         if (data.thread_id) threadId = data.thread_id;
       } catch (e) {
