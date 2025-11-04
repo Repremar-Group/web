@@ -734,15 +734,20 @@
         });
 
         const data = await res.json();
-        messages.lastChild.remove(); // borra el “…” temporal
+        messages.lastChild.remove(); // borra el “Procesando su solicitud…” temporal
+
+        let replyText = "";
 
         if (data.cargaData) {
           appendMessage("Estimado cliente, la información de la carga es la siguiente:", "bot");
           appendCargaCard(data.cargaData);
+          replyText = "Widget de carga mostrado"; // texto simbólico para historial
         } else {
-          appendMessage(data.reply || "Error obteniendo respuesta", "bot");
+          replyText = data.reply || "Error obteniendo respuesta";
+          appendMessage(replyText, "bot");
         }
-        conversationHistory.push({ role: "assistant", text: reply });
+
+        conversationHistory.push({ role: "assistant", text: replyText });
         localStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
 
         if (data.thread_id) threadId = data.thread_id;
