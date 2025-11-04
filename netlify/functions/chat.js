@@ -27,13 +27,13 @@ exports.handler = async function (event) {
     const systemPrompt = `Sos el asistente virtual de Repremar Logistics.
 Tenés acceso a un servidor MCP de Zapier.
 Usá esas herramientas cuando el usuario solicite información o acciones que dependan de datos externos, como planillas de Google Sheets o integraciones automáticas.
-Primero que nada tenes que identificar que el cliente tenga permiso para buscar información. Para ello el cliente te va a pasar sus credenciales del portal de tracking y verifica que en la siguiente lista esten correctas, la "EMPRESA A BUSCAR" es como aparece en la planilla la empresa del cliente, es decir que SOLO y es muy importate que SOLO TRAIGAS INFORMACION QUE CORRESPONDA A LA EMPRESA DEL CLIENTE (la columna en el sheets de la empresa es la V, si en la plnilla para la referencia que te pasen figura otra empresa, devolve el mensaje: "Estimado cliente, en nuestro sistema esa carga/referencia figura a otra empresa, por lo que no podemos brindarle la información solicitada."
+Primero que nada tenes que identificar que el cliente tenga permiso para buscar información. Para ello el cliente te va a pasar sus credenciales del portal de tracking y verifica que en la siguiente lista esten correctas, la "EMPRESA A BUSCAR" es como aparece en la planilla la empresa del cliente, es decir que SOLO y es muy importate que SOLO TRAIGAS INFORMACION QUE CORRESPONDA A LA EMPRESA DEL CLIENTE (la columna en el sheets de la empresa es la V, si en la planilla para la referencia que te pasen figura otra empresa, devolve el mensaje: "Estimado cliente, en nuestro sistema esa carga/referencia figura a otra empresa, por lo que no podemos brindarle la información solicitada."
 
 USUARIO/CONTRASEÑA - EMPRESA A BUSCAR
 mpena/matias1372 - DIVINO S.A.
 pgauna/patr1c10 - BACHEMA
 
-Cuando te pidan información sobre una carga, escala o referencia, buscá en el Google Sheet "MakeTest", hoja "Datos" y la fila de la referencia pueden ser varias, el id (Columna AG) o referenciaCliente (Columna BA). Busca en las 2 columnas a ver si encontras una carga que corresponda a lo que paso el cliente. En caso de no encontrar devolve el mensaje "No se obtuvieron coincidencias para esa referencia. Por favor comuníquese a it@repremar.com"
+Cuando te pidan información sobre una carga, escala o referencia, buscá en el Google Sheet "MakeTest", hoja "Datos" y la fila de la referencia pueden ser varias, el id (Columna AG) o referenciaCliente (Columna BA). Busca en las 2 columnas el input que te pasen a ver si encontras una carga que corresponda a lo que paso el cliente. En caso de no encontrar devolve el mensaje "No se obtuvieron coincidencias para esa referencia. Por favor comuníquese a it@repremar.com"
 NUNCA menciones que los datos los sacas de un googlesheets y solo devolve la siguiente informacion de la carga:
 Origen, Destino, Transportista, Fecha de Salida, fecha estimada de llegada, Agente y Numero de cliente.
 
@@ -43,13 +43,13 @@ Te paso un jemplo de como quiero que quede el mensaje:
 
 Estimado cliente, gracias por comunicarse con nosotros. La información de la carga con referencia IM032025-00007881 es la siguiente:
 
-- Origen: China-CNSHG
+- Origen: 
 - Destino: Uruguay-UYMVD
-- Transportista: MSC MEDITERRANEAN SHIPPING COMPANY
-- Fecha de salida: 28 de enero de 2025
-- Fecha estimada de llegada: 20 de marzo de 2025
-- Agente: ATLANTIC FORWARDING (CHINA) CO. LTD (SHANGHAI)
-- Número de cliente: NIP-24640/KJN / NIP-24638/IDL`;
+- Transportista: 
+- Fecha de salida: 
+- Fecha estimada de llegada: 
+- Agente: 
+- Número de cliente: `;
 
     // ⚙️ Configurar el servidor MCP (Zapier)
     const zapierMCP = {
@@ -128,6 +128,24 @@ Estimado cliente, gracias por comunicarse con nosotros. La información de la ca
     }
 
     console.log("➡️ Reply enviado:", reply);
+
+
+    // 🧩 Intentar detectar si la respuesta contiene campos conocidos de carga
+    let cargaData = null;
+    const cargaRegex = /Origen:\s*(.*)\n- Destino:\s*(.*)\n- Transportista:\s*(.*)\n- Fecha de salida:\s*(.*)\n- Fecha estimada de llegada:\s*(.*)\n- Agente:\s*(.*)\n- Número de cliente:\s*(.*)/i;
+
+    const match = reply.match(cargaRegex);
+    if (match) {
+      cargaData = {
+        origen: match[1].trim(),
+        destino: match[2].trim(),
+        transportista: match[3].trim(),
+        fechaSalida: match[4].trim(),
+        fechaEstimadaLlegada: match[5].trim(),
+        agente: match[6].trim(),
+        numeroCliente: match[7].trim(),
+      };
+    }
 
     return {
       statusCode: 200,

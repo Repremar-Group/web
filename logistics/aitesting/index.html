@@ -502,8 +502,8 @@
       position: fixed;
       bottom: 90px;
       right: 25px;
-      width: 380px;
-      height: 540px;
+      width: 480px;
+      height: 740px;
       background: #111;
       color: #f1f1f1;
       border-radius: 30px;
@@ -525,7 +525,7 @@
     }
 
     #chatkit-header {
-      background: linear-gradient(90deg, #0b5fff, #102f69);
+      background: linear-gradient(90deg, #3eb6aa, #102f69);
       color: #fff;
       font-weight: 600;
       text-align: center;
@@ -683,6 +683,34 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
+    function appendCargaCard(carga) {
+      const card = document.createElement("div");
+      card.className = "msg-bot";
+      card.innerHTML = `
+    <div style="
+      background:#1a1a1a;
+      border-radius:16px;
+      padding:12px;
+      margin-top:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    ">
+      <h4 style="margin:0 0 8px 0;color:#0b5fff;">📦 Detalles de la carga</h4>
+      <div style="font-size:14px;line-height:1.6;">
+        <b>Origen:</b> ${carga.origen}<br>
+        <b>Destino:</b> ${carga.destino}<br>
+        <b>Transportista:</b> ${carga.transportista}<br>
+        <b>Fecha de salida:</b> ${carga.fechaSalida}<br>
+        <b>Fecha estimada de llegada:</b> ${carga.fechaEstimadaLlegada}<br>
+        <b>Agente:</b> ${carga.agente}<br>
+        <b>Número de cliente:</b> ${carga.numeroCliente}
+      </div>
+    </div>
+  `;
+      messages.appendChild(card);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+
     // 🚀 Enviar mensaje al servidor
     async function sendMessage() {
       const text = input.value.trim();
@@ -706,9 +734,14 @@
         });
 
         const data = await res.json();
-        const reply = data.reply || "Error obteniendo respuesta";
+        messages.lastChild.remove(); // borra el “…” temporal
 
-        messages.lastChild.textContent = reply;
+        if (data.cargaData) {
+          appendMessage("Estimado cliente, la información de la carga es la siguiente:", "bot");
+          appendCargaCard(data.cargaData);
+        } else {
+          appendMessage(data.reply || "Error obteniendo respuesta", "bot");
+        }
         conversationHistory.push({ role: "assistant", text: reply });
         localStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
 
