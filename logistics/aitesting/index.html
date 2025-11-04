@@ -723,7 +723,7 @@
       appendMessage("Procesando su solicitud…", "bot");
 
       try {
-        const res = await fetch("/.netlify/functions/chat-background", {
+        const res = await fetch("/.netlify/functions/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
