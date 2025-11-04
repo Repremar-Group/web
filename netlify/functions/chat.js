@@ -121,7 +121,8 @@ Si el cliente solicita información de un campo que no sea los mencionados antes
 
     // 🧩 Intentar detectar si la respuesta contiene campos conocidos de carga
     let cargaData = null;
-    const cargaRegex = /Origen:\s*(.*)\n- Destino:\s*(.*)\n- Transportista:\s*(.*)\n- Fecha de salida:\s*(.*)\n- Fecha estimada de llegada:\s*(.*)\n- Agente:\s*(.*)\n- Número de cliente:\s*(.*)/i;
+    const cargaRegex =
+      /Origen:\s*(.*)\n- Destino:\s*(.*)\n- Transportista:\s*(.*)\n- (?:Fecha de salida|ETD.*?):\s*(.*)\n- (?:Fecha estimada de llegada|ETA.*?):\s*(.*)\n- Agente:\s*(.*)\n- (?:Número de cliente|Referencia Cliente):\s*(.*)/i;
 
     const match = reply.match(cargaRegex);
     if (match) {
@@ -129,8 +130,8 @@ Si el cliente solicita información de un campo que no sea los mencionados antes
         origen: match[1].trim(),
         destino: match[2].trim(),
         transportista: match[3].trim(),
-        fechaSalida: match[4].trim(),
-        fechaEstimadaLlegada: match[5].trim(),
+        etd: match[4].trim(),
+        eta: match[5].trim(),
         agente: match[6].trim(),
         numeroCliente: match[7].trim(),
       };
