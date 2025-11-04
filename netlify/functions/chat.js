@@ -146,7 +146,8 @@ Estimado cliente, gracias por comunicarse con nosotros. La información de la ca
         numeroCliente: match[7].trim(),
       };
     }
-
+    console.log("✅ Reply final:", reply);
+    console.log("✅ cargaData:", cargaData);
     return {
       statusCode: 200,
       headers: {
