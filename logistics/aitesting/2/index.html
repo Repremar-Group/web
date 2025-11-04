@@ -14,7 +14,10 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/colors/green.css">
   <link rel="preload" href="./assets/css/fonts/urbanist.css" as="style" onload="this.rel='stylesheet'">
-  <script src="https://cdn.platform.openai.com/v1/agents/agt_12345/chat.js" defer></script>
+
+
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script>
+
 
 </head>
 
@@ -491,114 +494,99 @@
       <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
     </svg>
   </div>
-  <script src="./assets/js/plugins.js"></script>
-  <script src="./assets/js/theme.js"></script>
-
-  <!-- ChatKit widget container bottom-right -->
+  <!-- Chat container -->
   <div id="my-chat" style="position: fixed; right: 25px; bottom: 25px; z-index: 2147483000;"></div>
 
   <script>
+    // Inicializador ChatKit oficial
     (function initChatKit() {
-      function setup() {
-        const chatEl = document.getElementById("my-chat");
-
-        // Esperar hasta que ChatKit se cargue
-        if (!window.ChatKit || typeof ChatKit.mount !== "function") {
-          console.warn("⏳ ChatKit aún no cargó, reintentando...");
-          return setTimeout(setup, 400);
+      async function waitForChatKit() {
+        // Espera a que el script esté listo
+        while (!window.ChatKit || typeof window.ChatKit.init !== "function") {
+          console.log("⏳ Esperando ChatKit...");
+          await new Promise(r => setTimeout(r, 300));
         }
+        console.log("✅ ChatKit detectado, inicializando...");
+        startChatKit();
+      }
 
-        console.log("✅ ChatKit detectado, inicializando widget...");
+      function startChatKit() {
+        const chatContainer = document.getElementById("my-chat");
 
-        ChatKit.mount({
-          element: chatEl,
-          options: {
-            api: {
-              async getClientSecret() {
-                try {
-                  const userId =
-                    localStorage.getItem("chatkit_device_id") ||
-                    (() => {
-                      const id = "device_" + Math.random().toString(36).slice(2);
-                      localStorage.setItem("chatkit_device_id", id);
-                      return id;
-                    })();
+        // Crear el contenedor del chat
+        const chatElement = document.createElement("chat-kit");
+        chatElement.style.width = "420px";
+        chatElement.style.height = "640px";
+        chatContainer.appendChild(chatElement);
 
-                  const res = await fetch("/.netlify/functions/chatkit-session", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ user: userId }),
-                  });
+        // Inicializar ChatKit
+        window.ChatKit.init({
+          element: chatElement,
+          api: {
+            async getClientSecret(existing) {
+              try {
+                const userId =
+                  localStorage.getItem("chatkit_device_id") ||
+                  (() => {
+                    const id = "device_" + Math.random().toString(36).slice(2);
+                    localStorage.setItem("chatkit_device_id", id);
+                    return id;
+                  })();
 
-                  const data = await res.json();
-                  console.log("🔑 client_secret recibido:", data);
-                  return data.client_secret;
-                } catch (e) {
-                  console.error("❌ Error obteniendo client_secret:", e);
-                  throw e;
-                }
-              },
+                const res = await fetch("/.netlify/functions/chatkit-session", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ user: userId }),
+                });
+
+                const data = await res.json();
+                if (!data.client_secret) throw new Error("No client_secret en la respuesta");
+                console.log("🔑 client_secret recibido:", data.client_secret);
+                return data.client_secret;
+              } catch (err) {
+                console.error("❌ Error obteniendo client_secret:", err);
+                throw err;
+              }
             },
-
-            // --- Apariencia ---
-            theme: {
-              colorScheme: "light",
-              radius: "pill",
-              density: "normal",
-              color: {
-                accent: {
-                  primary: "#3eb6aa",
-                  level: 1,
-                },
-                surface: {
-                  background: "#fcfcfc",
-                  foreground: "#3eb6aa",
-                },
-              },
-              typography: {
-                baseSize: 16,
-                fontFamily:
-                  '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif',
-                fontFamilyMono:
-                  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace',
-                fontSources: [
-                  {
-                    family: "OpenAI Sans",
-                    src: "https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2",
-                    weight: 400,
-                    style: "normal",
-                    display: "swap",
-                  },
-                ],
-              },
+          },
+          theme: {
+            colorScheme: "light",
+            radius: "pill",
+            color: {
+              accent: { primary: "#3eb6aa" },
+              surface: { background: "#ffffff", foreground: "#3eb6aa" },
             },
-
-            // --- Zona de texto del chat ---
-            composer: {
-              placeholder: "Chatea con nuestra IA",
-              attachments: { enabled: false },
+            typography: {
+              baseSize: 16,
+              fontFamily:
+                '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
             },
-
-            // --- Pantalla inicial ---
-            startScreen: {
-              greeting:
-                "Para iniciar, ingresa tus credenciales del portal de tracking:",
-              prompts: [],
-            },
+          },
+          composer: {
+            placeholder: "Chatea con nuestra IA logística...",
+            attachments: { enabled: false },
+          },
+          startScreen: {
+            greeting:
+              "👋 Bienvenido a Repremar Logistics.\nPara realizar consultas, ingrese su usuario y contraseña del portal de tracking:",
+            prompts: [],
           },
         });
       }
 
-      if (
-        document.readyState === "complete" ||
-        document.readyState === "interactive"
-      ) {
-        setTimeout(setup, 0);
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        waitForChatKit();
       } else {
-        document.addEventListener("DOMContentLoaded", setup);
+        document.addEventListener("DOMContentLoaded", waitForChatKit);
       }
     })();
   </script>
+
+
+  <script src="./assets/js/plugins.js"></script>
+  <script src="./assets/js/theme.js"></script>
+
+
 
 
 </body>
