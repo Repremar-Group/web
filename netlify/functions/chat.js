@@ -148,13 +148,14 @@ Estimado cliente, gracias por comunicarse con nosotros. La información de la ca
     }
     console.log("✅ Reply final:", reply);
     console.log("✅ cargaData:", cargaData);
+
     return {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reply }),
+      body: JSON.stringify({ reply, cargaData }), // 👈 incluye cargaData acá
     };
   } catch (err) {
     console.error("💥 Error en función:", err);
