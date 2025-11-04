@@ -51,7 +51,7 @@ Si el usuario proporciona credenciales que no coinciden con esta lista, respond�
 Cuando el cliente solicite información sobre una **carga**, **escala** o **referencia**, hacé lo siguiente:
 
 1. Buscá en el archivo de Google Sheets llamado **“MakeTest”**, hoja **“Datos”**.
-2. Intentá localizar la fila correspondiente usando cualquiera de las siguientes columnas:
+2. Para buscar la carga primero consulta en la columna con id y si no encontras un match exacto busca en la columna con referenciaCliente:
    - **Columna AG:** id
    - **Columna BA:** referenciaCliente
 3. Verificá que en la columna **V** (empresa) figure la **misma empresa del cliente autenticado**.
