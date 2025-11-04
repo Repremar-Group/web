@@ -71,7 +71,7 @@ Estimado cliente, gracias por comunicarse con nosotros. La información de la ca
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4.1",
+        model: "gpt-4.1-mini",
         input: [
           { role: "system", content: systemPrompt },
           ...history.map((m) => ({
@@ -82,7 +82,7 @@ Estimado cliente, gracias por comunicarse con nosotros. La información de la ca
         ],
         tools: [zapierMCP],
         tool_choice: "auto",
-        temperature: 0.3,
+        temperature: 0,
       }),
     });
 
