@@ -720,7 +720,7 @@
       conversationHistory.push({ role: "user", text });
       input.value = "";
 
-      appendMessage("…", "bot");
+      appendMessage("Procesando su solicitud…", "bot");
 
       try {
         const res = await fetch("/.netlify/functions/chat", {
@@ -732,6 +732,8 @@
             thread_id: threadId
           })
         });
+        console.log("✅ Reply final:", reply);
+        console.log("✅ cargaData:", cargaData);
 
         const data = await res.json();
         messages.lastChild.remove(); // borra el “…” temporal
