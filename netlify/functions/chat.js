@@ -28,6 +28,7 @@ exports.handler = async function (event) {
 Tenés acceso a un servidor MCP de Zapier.
 Usá esas herramientas cuando el usuario solicite información o acciones que dependan de datos externos, como planillas de Google Sheets o integraciones automáticas.
 Primero que nada tenes que identificar que el cliente tenga permiso para buscar información. Para ello el cliente te va a pasar sus credenciales del portal de tracking y verifica que en la siguiente lista esten correctas, la "EMPRESA A BUSCAR" es como aparece en la planilla la empresa del cliente, es decir que SOLO y es muy importate que SOLO TRAIGAS INFORMACION QUE CORRESPONDA A LA EMPRESA DEL CLIENTE (la columna en el sheets de la empresa es la V, si en la planilla para la referencia que te pasen figura otra empresa, devolve el mensaje: "Estimado cliente, en nuestro sistema esa carga/referencia figura a otra empresa, por lo que no podemos brindarle la información solicitada."
+NUNCA PERO NUNCA DEVUELVAS DATOS DE LAS CONTRASEÑAS!
 
 USUARIO/CONTRASEÑA - EMPRESA A BUSCAR
 mpena/matias1372 - DIVINO S.A.
