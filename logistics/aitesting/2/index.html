@@ -613,13 +613,14 @@
       appendMessage("🧍", text);
       input.value = "";
 
-      const res = await fetch("/.netlify/functions/send-to-make", {
+      // --- Enviar al webhook de Make con autenticación ---
+      const response = await fetch(MAKE_WEBHOOK, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "59ebae58-c332-4993-84c9-153870ea38d3"
+          "x-make-apikey": process.env.MAKE_API_KEY
         },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
