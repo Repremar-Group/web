@@ -122,7 +122,7 @@ Tu respuesta debe ser:
       require_approval: "never",
       headers: {
         Authorization:
-          "Bearer NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OjljNDBhY2FkLWQ4NDYtNDQzZi04OTI3LWE5MzZiZDhhODYyNg==",
+          "Bearer NjZhYmU0ZTgtM2FlNC00MzFhLWJmMjYtY2RlOTgwOTY3Mjg1OmJjNjE2NjRkLWNmMGItNDk3Mi1hZmU0LTBkZGJiMzc1OTQzNw==",
       },
     };
 
