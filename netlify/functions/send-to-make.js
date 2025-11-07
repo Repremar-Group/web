@@ -1,10 +1,11 @@
 export async function handler(event) {
+  // CORS
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 204,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Headers": "Content-Type, x-api-key",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
       },
     };
@@ -16,12 +17,20 @@ export async function handler(event) {
 
   try {
     const body = JSON.parse(event.body || "{}");
+    const MAKE_WEBHOOK = process.env.MAKE_WEBHOOK_URL;
+    const MAKE_API_KEY = process.env.MAKE_API_KEY;
 
-    // URL MAKE
-    const MAKE_WEBHOOK = "https://hook.us2.make.com/ofbnh3fdq2tqhc2hoyagka7ei8uxdoyk";
+    // 🛡️ Validar que la llamada venga con la API Key correcta
+    const providedKey = event.headers["x-api-key"];
+    if (providedKey !== MAKE_API_KEY) {
+      return {
+        statusCode: 401,
+        headers: { "Access-Control-Allow-Origin": "*" },
+        body: JSON.stringify({ error: "Unauthorized" }),
+      };
+    }
 
-    console.log("➡️ Enviando payload a Make:", body);
-
+    // 🔄 Reenviar al webhook de Make
     const response = await fetch(MAKE_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,15 +38,12 @@ export async function handler(event) {
     });
 
     const text = await response.text();
-    console.log("✅ Respuesta de Make:", response.status, text);
-
     return {
       statusCode: response.status,
       headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ ok: response.ok, result: text }),
     };
   } catch (err) {
-    console.error("❌ Error en función send-to-make:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },

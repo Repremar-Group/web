@@ -615,8 +615,11 @@
 
       const res = await fetch("/.netlify/functions/send-to-make", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "59ebae58-c332-4993-84c9-153870ea38d3"
+        },
+        body: JSON.stringify({ message: text })
       });
 
       const data = await res.json();
