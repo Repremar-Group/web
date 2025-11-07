@@ -15,7 +15,8 @@ export async function handler(event) {
     }
 
     try {
-        const MAKE_WEBHOOK = process.env.MAKE_WEBHOOK_URL;
+        const MAKE_WEBHOOK = "https://hook.us2.make.com/mwvklj8f7taffxfdsw3wjvf8w5dribfo";
+
         const MAKE_API_KEY = process.env.MAKE_API_KEY;
 
         // --- Validar API key ---
