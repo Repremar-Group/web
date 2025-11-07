@@ -622,8 +622,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // esta API key se valida en la función Netlify, NO es la de Make
-            "x-api-key": "59ebae58-c332-4993-84c9-153870ea38d3"
+            "x-api-key": "59ebae58-c332-4993-84c9-153870ea38d3" // 🔒 tu clave pública interna
           },
           body: JSON.stringify({ message: text }),
         });
