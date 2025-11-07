@@ -1,5 +1,4 @@
 export async function handler(event) {
-  // Permitir CORS para llamadas desde el navegador
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 204,
@@ -17,7 +16,11 @@ export async function handler(event) {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const MAKE_WEBHOOK = "https://ofbnh3fdq2tqhc2hoyagka7ei8uxdoyk@hook.us2.make.com";
+
+    // ✅ URL corregida sin el @
+    const MAKE_WEBHOOK = "https://hook.us2.make.com/ofbnh3fdq2tqhc2hoyagka7ei8uxdoyk";
+
+    console.log("➡️ Enviando payload a Make:", body);
 
     const response = await fetch(MAKE_WEBHOOK, {
       method: "POST",
@@ -25,18 +28,20 @@ export async function handler(event) {
       body: JSON.stringify(body),
     });
 
-    const result = await response.text();
+    const text = await response.text();
+    console.log("✅ Respuesta de Make:", response.status, text);
 
     return {
-      statusCode: 200,
+      statusCode: response.status,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ ok: true, response: result }),
+      body: JSON.stringify({ ok: response.ok, result: text }),
     };
-  } catch (error) {
+  } catch (err) {
+    console.error("❌ Error en función send-to-make:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ ok: false, error: error.message }),
+      body: JSON.stringify({ error: err.message }),
     };
   }
 }
