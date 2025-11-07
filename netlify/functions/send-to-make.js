@@ -17,7 +17,7 @@ export async function handler(event) {
   try {
     const body = JSON.parse(event.body || "{}");
 
-    // ✅ URL corregida sin el @
+    // URL MAKE
     const MAKE_WEBHOOK = "https://hook.us2.make.com/ofbnh3fdq2tqhc2hoyagka7ei8uxdoyk";
 
     console.log("➡️ Enviando payload a Make:", body);
