@@ -499,10 +499,12 @@
   /* --- Estilos generales --- */
   #chatkit-wrapper {
   position: fixed;
-  bottom: 90px;
-  right: 25px;
-  width: 380px;
-  height: 540px;
+  bottom: 5vh; /* más flexible que px */
+  right: 20px;
+  width: 28vw;
+  max-width: 480px;
+  height: 80vh; /* ocupa 80% de la altura disponible */
+  max-height: 740px;
   background: #111;
   color: #f1f1f1;
   border-radius: 30px;
@@ -515,7 +517,8 @@
   transform: scale(0.95);
   opacity: 0;
   transition: all 0.3s ease;
-  }
+}
+
 
   #chatkit-wrapper.open {
   display: flex;
@@ -723,7 +726,7 @@
       </div>
     </div>
     <div id="chatkit-inputbox">
-      <input id="chatkit-input" placeholder="Ingresa tus credenciales del portal clientes" />
+      <input id="chatkit-input" placeholder="Consulte por sus cargas!" />
       <button id="chatkit-send">➤</button>
     </div>
   </div>
