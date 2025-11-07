@@ -14,11 +14,6 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/colors/green.css">
   <link rel="preload" href="./assets/css/fonts/urbanist.css" as="style" onload="this.rel='stylesheet'">
-
-
-  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script>
-
-
 </head>
 
 <body>
@@ -494,100 +489,152 @@
       <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
     </svg>
   </div>
-  <!-- Chat container -->
-  <div id="my-chat" style="position: fixed; right: 25px; bottom: 25px; z-index: 2147483000;"></div>
-
-  <script>
-    // Inicializador ChatKit oficial
-    (function initChatKit() {
-      async function waitForChatKit() {
-        // Espera a que el script esté listo
-        while (!window.ChatKit || typeof window.ChatKit.init !== "function") {
-          console.log("⏳ Esperando ChatKit...");
-          await new Promise(r => setTimeout(r, 300));
-        }
-        console.log("✅ ChatKit detectado, inicializando...");
-        startChatKit();
-      }
-
-      function startChatKit() {
-        const chatContainer = document.getElementById("my-chat");
-
-        // Crear el contenedor del chat
-        const chatElement = document.createElement("chat-kit");
-        chatElement.style.width = "420px";
-        chatElement.style.height = "640px";
-        chatContainer.appendChild(chatElement);
-
-        // Inicializar ChatKit
-        window.ChatKit.init({
-          element: chatElement,
-          api: {
-            async getClientSecret(existing) {
-              try {
-                const userId =
-                  localStorage.getItem("chatkit_device_id") ||
-                  (() => {
-                    const id = "device_" + Math.random().toString(36).slice(2);
-                    localStorage.setItem("chatkit_device_id", id);
-                    return id;
-                  })();
-
-                const res = await fetch("/.netlify/functions/chatkit-session", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ user: userId }),
-                });
-
-                const data = await res.json();
-                if (!data.client_secret) throw new Error("No client_secret en la respuesta");
-                console.log("🔑 client_secret recibido:", data.client_secret);
-                return data.client_secret;
-              } catch (err) {
-                console.error("❌ Error obteniendo client_secret:", err);
-                throw err;
-              }
-            },
-          },
-          theme: {
-            colorScheme: "light",
-            radius: "pill",
-            color: {
-              accent: { primary: "#3eb6aa" },
-              surface: { background: "#ffffff", foreground: "#3eb6aa" },
-            },
-            typography: {
-              baseSize: 16,
-              fontFamily:
-                '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-            },
-          },
-          composer: {
-            placeholder: "Chatea con nuestra IA logística...",
-            attachments: { enabled: false },
-          },
-          startScreen: {
-            greeting:
-              "👋 Bienvenido a Repremar Logistics.\nPara realizar consultas, ingrese su usuario y contraseña del portal de tracking:",
-            prompts: [],
-          },
-        });
-      }
-
-      if (document.readyState === "complete" || document.readyState === "interactive") {
-        waitForChatKit();
-      } else {
-        document.addEventListener("DOMContentLoaded", waitForChatKit);
-      }
-    })();
-  </script>
-
-
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/theme.js"></script>
 
 
+  <!-- Chat Widget Repremar -->
+  <style>
+    #chat-bubble {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: #3eb6aa;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
 
+    #chat-bubble:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    #chat-bubble svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
+
+    #chat-widget {
+      position: fixed;
+      bottom: 100px;
+      right: 25px;
+      width: 400px;
+      height: 500px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+      font-family: "OpenAI Sans", system-ui, sans-serif;
+    }
+
+    #chat-header {
+      background: #3eb6aa;
+      color: #fff;
+      padding: 12px 20px;
+      font-weight: 600;
+    }
+
+    #chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    #chat-input input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      outline: none;
+    }
+
+    #chat-input button {
+      background: #3eb6aa;
+      color: #fff;
+      border: none;
+      padding: 0 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #chat-input button:hover {
+      background: #2f9d91;
+    }
+  </style>
+
+  <div id="chat-bubble">
+    <svg viewBox="0 0 24 24">
+      <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" />
+    </svg>
+  </div>
+
+  <div id="chat-widget">
+    <div id="chat-header">Repremar Virtual Assistant</div>
+    <div id="chat-messages">
+      <div><b>🤖</b> Hola! Para iniciar, indique su usuario y contraseña del portal de tracking.</div>
+    </div>
+    <div id="chat-input">
+      <input id="chat-text" type="text" placeholder="Escriba su mensaje..." />
+      <button id="chat-send">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    const bubble = document.getElementById("chat-bubble");
+    const widget = document.getElementById("chat-widget");
+    const sendBtn = document.getElementById("chat-send");
+    const input = document.getElementById("chat-text");
+    const messages = document.getElementById("chat-messages");
+
+    bubble.addEventListener("click", () => {
+      widget.style.display = widget.style.display === "flex" ? "none" : "flex";
+    });
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage("🧍", text);
+      input.value = "";
+
+      const res = await fetch("/.netlify/functions/send-to-make", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await res.json();
+      appendMessage("🤖", "Mensaje recibido, procesando...");
+    }
+
+    function appendMessage(author, text) {
+      const div = document.createElement("div");
+      div.innerHTML = `<b>${author}</b> ${text}`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
 
 </body>
 

@@ -2,6 +2,14 @@
   publish = "."
   functions = "netlify/functions"
 
+  
+[[headers]]
+  for = "/.netlify/functions/send-to-make"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["@modelcontextprotocol/sdk", "@openai/agents"]
