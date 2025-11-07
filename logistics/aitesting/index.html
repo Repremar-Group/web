@@ -496,227 +496,253 @@
   <link rel="preconnect" href="https://cdn.openai.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-  /* --- Estilos generales --- */
-  #chatkit-wrapper {
-  position: fixed;
-  bottom: 5vh; /* más flexible que px */
-  right: 20px;
-  width: 28vw;
-  max-width: 480px;
-  height: 80vh; /* ocupa 80% de la altura disponible */
-  max-height: 740px;
-  background: #111;
-  color: #f1f1f1;
-  border-radius: 30px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 9999;
-  font-family: 'Inter', system-ui, sans-serif;
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.3s ease;
-}
+    /* --- Estilos generales --- */
+    #chatkit-wrapper {
+      position: fixed;
+      bottom: 100px;
+      /* espacio seguro para no chocar con la burbuja */
+      right: 25px;
+      width: min(420px, 90vw);
+      /* se adapta al ancho disponible */
+      height: min(80vh, 680px);
+      /* ocupa 80% del alto visible, sin pasarse */
+      background: #111;
+      color: #f1f1f1;
+      border-radius: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9998;
+      /* debajo de la burbuja */
+      font-family: 'Inter', system-ui, sans-serif;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
 
 
-  #chatkit-wrapper.open {
-  display: flex;
-  opacity: 1;
-  transform: scale(1);
-  animation: fadeIn 0.3s ease forwards;
-  }
 
-  /* --- Header --- */
-  #chatkit-header {
-  background: linear-gradient(90deg, #3eb6aa, #102f69);
-  color: #fff;
-  font-weight: 600;
-  text-align: center;
-  padding: 12px;
-  letter-spacing: .5px;
-  }
+    #chatkit-wrapper.open {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+      animation: fadeIn 0.3s ease forwards;
+    }
 
-  /* --- Mensajes --- */
-  #chatkit-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  font-size: 15px;
-  }
+    /* --- Header --- */
+    #chatkit-header {
+      background: linear-gradient(90deg, #3eb6aa, #102f69);
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      padding: 12px;
+      letter-spacing: .5px;
+    }
 
-  .msg-user,
-  .msg-bot {
-  max-width: 85%;
-  padding: 8px 12px;
-  margin: 8px 0;
-  border-radius: 18px;
-  line-height: 1.4;
-  word-wrap: break-word;
-  }
+    /* --- Mensajes --- */
+    #chatkit-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      font-size: 15px;
+    }
 
-  .msg-user {
-  background: #102f69;
-  color: #fff;
-  margin-left: auto;
-  border-bottom-right-radius: 0;
-  }
+    .msg-user,
+    .msg-bot {
+      max-width: 85%;
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
 
-  .msg-bot {
-  background: #222;
-  color: #eee;
-  margin-right: auto;
-  border-bottom-left-radius: 0;
-  }
+    .msg-user {
+      background: #102f69;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
 
-  /* --- Input --- */
-  #chatkit-inputbox {
-  display: flex;
-  border-top: 1px solid #333;
-  }
+    .msg-bot {
+      background: #222;
+      color: #eee;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+    }
 
-  #chatkit-input {
-  flex: 1;
-  border: none;
-  background: #111;
-  color: #eee;
-  padding: 10px 14px;
-  outline: none;
-  font-size: 15px;
-  }
+    /* --- Input --- */
+    #chatkit-inputbox {
+      display: flex;
+      border-top: 1px solid #333;
+    }
 
-  #chatkit-send {
-  background: #102f69;
-  border: none;
-  color: #fff;
-  padding: 0 18px;
-  cursor: pointer;
-  font-size: 16px;
-  }
+    #chatkit-input {
+      flex: 1;
+      border: none;
+      background: #111;
+      color: #eee;
+      padding: 10px 14px;
+      outline: none;
+      font-size: 15px;
+    }
 
-  /* --- Burbuja flotante --- */
-  #chatkit-bubble {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #102f69, #102f69);
-  border-radius: 50%;
-  box-shadow: 0 0 20px rgba(11, 95, 255, 0.4);
-  cursor: pointer;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  }
+    #chatkit-send {
+      background: #102f69;
+      border: none;
+      color: #fff;
+      padding: 0 18px;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-  #chatkit-bubble:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px rgba(11, 95, 255, 0.7);
-  }
+    /* --- Burbuja flotante --- */
+    #chatkit-bubble {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #102f69, #102f69);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(11, 95, 255, 0.4);
+      cursor: pointer;
+      z-index: 9999;
+      /* siempre arriba del wrapper */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
 
-  #chatkit-bubble svg {
-  width: 28px;
-  height: 28px;
-  fill: white;
-  }
 
-  /* --- Animación de aparición --- */
-  @keyframes fadeIn {
-  from {
-  opacity: 0;
-  transform: translateY(10px);
-  }
+    #chatkit-bubble:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(11, 95, 255, 0.7);
+    }
 
-  to {
-  opacity: 1;
-  transform: translateY(0);
-  }
-  }
+    #chatkit-bubble svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
 
-  /* --- RESPONSIVE DESIGN --- */
+    /* --- Animación de aparición --- */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-  /* 📱 Móviles (pantallas pequeñas) */
-  @media (max-width: 600px) {
-  #chatkit-wrapper {
-  bottom: 0;
-  right: 0;
-  width: 100vw;
-  height: 100vh;
-  border-radius: 0;
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  #chatkit-header {
-  font-size: 16px;
-  padding: 10px;
-  }
+    /* --- RESPONSIVE DESIGN --- */
 
-  #chatkit-messages {
-  font-size: 14px;
-  padding: 10px;
-  }
+    /* 📱 Móviles (pantallas pequeñas) */
+    @media (max-width: 600px) {
+      #chatkit-wrapper {
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        max-height: 100vh;
+      }
 
-  #chatkit-input {
-  font-size: 14px;
-  padding: 8px 10px;
-  }
+      #chatkit-header {
+        font-size: 16px;
+        padding: 10px;
+      }
 
-  #chatkit-send {
-  padding: 0 14px;
-  font-size: 14px;
-  }
+      #chatkit-messages {
+        font-size: 14px;
+        padding: 10px;
+      }
 
-  #chatkit-bubble {
-  width: 50px;
-  height: 50px;
-  bottom: 20px;
-  right: 20px;
-  }
+      #chatkit-input {
+        font-size: 14px;
+        padding: 8px 10px;
+      }
 
-  #chatkit-bubble svg {
-  width: 24px;
-  height: 24px;
-  }
-  }
+      #chatkit-send {
+        padding: 0 14px;
+        font-size: 14px;
+      }
 
-  /* 💻 Tablets y pantallas medianas */
-  @media (min-width: 601px) and (max-width: 1024px) {
-  #chatkit-wrapper {
-  width: 400px;
-  height: 600px;
-  bottom: 70px;
-  right: 20px;
-  }
+      #chatkit-bubble {
+        width: 55px;
+        height: 55px;
+        bottom: 15px;
+        right: 15px;
+      }
 
-  #chatkit-header {
-  font-size: 17px;
-  }
+      #chatkit-bubble svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
 
-  #chatkit-messages {
-  font-size: 14px;
-  }
+    /* 💻 Tablets y notebooks medianas (incluye pantallas 13”-15”) */
+    @media (min-width: 601px) and (max-width: 1280px),
+    (max-height: 900px) {
+      #chatkit-wrapper {
+        width: min(420px, 90vw);
+        height: min(80vh, 680px);
+        bottom: 100px;
+        /* evita solaparse con la burbuja */
+        right: 25px;
+        border-radius: 25px;
+      }
 
-  #chatkit-bubble {
-  width: 55px;
-  height: 55px;
-  }
+      #chatkit-header {
+        font-size: 17px;
+        padding: 12px;
+      }
 
-  #chatkit-bubble svg {
-  width: 26px;
-  height: 26px;
-  }
-  }
+      #chatkit-messages {
+        font-size: 14px;
+      }
 
-  /* 🖥️ Pantallas grandes */
-  @media (min-width: 1025px) {
-  #chatkit-wrapper {
-  width: 480px;
-  height: 740px;
-  }
-  }
+      #chatkit-bubble {
+        width: 55px;
+        height: 55px;
+        bottom: 25px;
+        right: 25px;
+      }
 
+      #chatkit-bubble svg {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    /* 🖥️ Pantallas grandes (monitores de escritorio) */
+    @media (min-width: 1281px) {
+      #chatkit-wrapper {
+        width: 480px;
+        height: 740px;
+        bottom: 100px;
+        /* espacio seguro respecto a la burbuja */
+        right: 25px;
+      }
+
+      #chatkit-bubble {
+        width: 60px;
+        height: 60px;
+        bottom: 25px;
+        right: 25px;
+      }
+
+      #chatkit-bubble svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
   </style>
   <!-- Chat Widget -->
   <div id="chatkit-wrapper">
