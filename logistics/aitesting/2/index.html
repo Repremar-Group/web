@@ -614,7 +614,7 @@
       input.value = "";
 
       // --- Enviar al webhook de Make con autenticación ---
-      const response = await fetch(MAKE_WEBHOOK, {
+      const res = await fetch("/.netlify/functions/send-to-make", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
