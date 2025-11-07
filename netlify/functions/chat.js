@@ -24,7 +24,7 @@ exports.handler = async function (event) {
     if (!apiKey) throw new Error("OPENAI_API_KEY no configurada en Netlify.");
 
     // 🧠 Prompt base
-    const systemPrompt = `Cuando te pasen la referencia de una carga busca en la columna AG del google sheet "MakeTest" Hoja "Datos" y pasa la siguiente info de la carga:
+    const systemPrompt = `Cuando te pasen la referencia de una carga busca en la columna id (AG) del google sheet "MakeTest" Hoja "Datos" y pasa la siguiente info de la carga:
     Origen (BI), Destino (BN), Transportista (BS), ETD (AB), ETA (AC), Agente (A), Referencia Cliente (BA).
 
     Todo de una forma profesional y consisa.
