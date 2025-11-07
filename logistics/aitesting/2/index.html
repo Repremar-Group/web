@@ -603,30 +603,52 @@
     const input = document.getElementById("chat-text");
     const messages = document.getElementById("chat-messages");
 
+    // Alternar apertura del chat
     bubble.addEventListener("click", () => {
       widget.style.display = widget.style.display === "flex" ? "none" : "flex";
     });
 
+    // Enviar mensaje al backend (Netlify Function)
     async function sendMessage() {
       const text = input.value.trim();
       if (!text) return;
+
       appendMessage("🧍", text);
       input.value = "";
 
-      // --- Enviar al webhook de Make con autenticación ---
-      const res = await fetch("/.netlify/functions/send-to-make", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-make-apikey": process.env.MAKE_API_KEY
-        },
-        body: JSON.stringify(body),
-      });
+      try {
+        // 🔒 Enviar al backend seguro
+        const res = await fetch("/.netlify/functions/send-to-make", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // esta API key se valida en la función Netlify, NO es la de Make
+            "x-api-key": "59ebae58-c332-4993-84c9-153870ea38d3"
+          },
+          body: JSON.stringify({ message: text }),
+        });
 
-      const data = await res.json();
-      appendMessage("🤖", "Mensaje recibido, procesando...");
+        if (!res.ok) {
+          appendMessage("⚠️", `Error: ${res.status} ${res.statusText}`);
+          return;
+        }
+
+        const data = await res.json();
+
+        appendMessage("🤖", "Mensaje recibido, procesando...");
+
+        // Si querés mostrar la respuesta del escenario Make:
+        if (data?.result) {
+          appendMessage("🤖", data.result);
+        }
+
+      } catch (err) {
+        console.error("Error enviando mensaje:", err);
+        appendMessage("⚠️", "Ocurrió un error al enviar el mensaje.");
+      }
     }
 
+    // Agregar mensaje al panel
     function appendMessage(author, text) {
       const div = document.createElement("div");
       div.innerHTML = `<b>${author}</b> ${text}`;
@@ -634,11 +656,13 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
+    // Eventos
     sendBtn.addEventListener("click", sendMessage);
     input.addEventListener("keydown", e => {
       if (e.key === "Enter") sendMessage();
     });
   </script>
+
 
 </body>
 
