@@ -1,94 +1,46 @@
 
+// netlify/functions/chatkit-session.js
+const fetch = require("node-fetch");
 
-// Netlify Function: Create ChatKit session and return client_secret
-// Expects env vars: OPENAI_API_KEY, WORKFLOW_ID
-
-exports.handler = async function (event) {
-  // CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Method Not Allowed' }),
-    };
-  }
-
+exports.handler = async () => {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
-    const workflowId = process.env.WORKFLOW_ID;
-
-    if (!apiKey || !workflowId) {
-      return {
-        statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ error: 'Missing OPENAI_API_KEY or WORKFLOW_ID' }),
-      };
-    }
-
-    let user = 'anonymous';
-    try {
-      const payload = event.body ? JSON.parse(event.body) : {};
-      if (payload && payload.user) user = String(payload.user);
-    } catch (_) {}
-
-    const response = await fetch('https://api.openai.com/v1/chatkit/sessions', {
-      method: 'POST',
+    // Llama a OpenAI para crear la sesión
+    const response = await fetch("https://api.openai.com/v1/chatkit/sessions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'OpenAI-Beta': 'chatkit_beta=v1',
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "chatkit_beta=v1",
+        "Authorization": "Bearer " + process.env.OPENAI_API_KEY
       },
       body: JSON.stringify({
-        workflow: { id: workflowId },
-        user,
-      }),
+        workflow: {
+          id: "TU_WORKFLOW_ID_ACÁ"   // ⚠️ reemplazalo
+        },
+        user: "device_" + Date.now() // algo único por sesión
+      })
     });
 
-    if (!response.ok) {
-      const text = await response.text();
-      return {
-        statusCode: response.status,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ error: 'OpenAI error', details: text }),
-      };
-    }
-
     const data = await response.json();
-    const client_secret = data && data.client_secret;
-    if (!client_secret) {
-      return {
-        statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ error: 'Missing client_secret in response' }),
-      };
+
+    if (!data.client_secret) {
+      throw new Error("No se recibió client_secret de OpenAI. Respuesta: " + JSON.stringify(data));
     }
 
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ client_secret }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ client_secret: data.client_secret })
     };
+
   } catch (err) {
+    console.error("Error creando sesión ChatKit:", err);
+
     return {
       statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Server error', details: String(err) }),
+      body: JSON.stringify({
+        error: "No se pudo generar el client_secret",
+        detail: err.message
+      })
     };
   }
 };
-
-
