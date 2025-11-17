@@ -396,68 +396,81 @@
   </style>
 
   <script>
-    let chatLoaded = false;
-    let chatInstance = null;
+document.addEventListener("DOMContentLoaded", () => {
 
-    const bubble = document.getElementById("chatkit-bubble");
-    const container = document.getElementById("chatkit-container");
+  let chatLoaded = false;
+  let chatInstance = null;
 
-    bubble.addEventListener("click", async () => {
-      if (!chatLoaded) {
-        await initChatKit();
-        chatLoaded = true;
+  const bubble = document.getElementById("chatkit-bubble");
+  const container = document.getElementById("chatkit-container");
+
+  if (!bubble) {
+    console.error("No se encontró #chatkit-bubble en el DOM.");
+    return;
+  }
+
+  bubble.addEventListener("click", async () => {
+    console.log("Burbuja clickeada!");
+    if (!chatLoaded) {
+      await initChatKit();
+      chatLoaded = true;
+    }
+    container.style.display = "block";
+  });
+
+  async function waitForChatKit() {
+    return new Promise((resolve) => {
+      const check = () => {
+        if (window.ChatKit && window.ChatKit.mount) {
+          console.log("ChatKit cargado!");
+          return resolve();
+        }
+        console.log("Esperando a ChatKit...");
+        setTimeout(check, 80);
+      };
+      check();
+    });
+  }
+
+  async function initChatKit() {
+    await waitForChatKit();
+
+    const options = {
+      api: {
+        async getClientSecret() {
+          const res = await fetch("/.netlify/functions/chatkit-session", {
+            method: "POST"
+          });
+          const data = await res.json();
+          return data.client_secret;
+        }
+      },
+      theme: {
+        colorScheme: 'light',
+        radius: 'pill',
+        density: 'normal'
+      },
+      composer: {
+        placeholder: 'Chatea con nuestra IA',
+        attachments: { enabled: false }
+      },
+      startScreen: {
+        greeting: 'Para iniciar brinde su usuario y clave del portal de tracking.',
+        prompts: []
       }
-      container.style.display = "block";
+    };
+
+    chatInstance = await window.ChatKit.mount({
+      element: container,
+      options
     });
 
-    async function waitForChatKit() {
-      return new Promise((resolve) => {
-        const check = () => {
-          if (window.ChatKit && window.ChatKit.mount) {
-            return resolve();
-          }
-          setTimeout(check, 80);
-        };
-        check();
-      });
-    }
+    console.log("ChatKit montado con éxito!");
+  }
 
-    async function initChatKit() {
-      await waitForChatKit();
+});
+</script>
 
-      const options = {
-        api: {
-          async getClientSecret() {
-            const res = await fetch("/.netlify/functions/chatkit-session", { method: "POST" });
-            const data = await res.json();
-            return data.client_secret;
-          }
-        },
-        theme: {
-          colorScheme: "light",
-          radius: "pill",
-          density: "normal",
-          typography: {
-            baseSize: 16,
-            fontFamily: '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial'
-          }
-        },
-        composer: {
-          placeholder: "Chatea con nuestra IA",
-          attachments: { enabled: false }
-        },
-        startScreen: {
-          greeting: "Para iniciar brinde su usuario y clave del portal de tracking.",
-          prompts: []
-        }
-      };
-
-      chatInstance = await window.ChatKit.mount({
-        element: container,
-        options
-      });
-    }
-  </script>
 
 </body>
 
