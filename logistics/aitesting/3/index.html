@@ -457,7 +457,8 @@
   <!-- Scripts originales -->
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/theme.js"></script>
-  <!-- ChatKit Script -->
+
+  <!-- ChatKit Script (sin async ❗) -->
   <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
 
   <!-- 💬 Burbuja del Chat -->
@@ -537,6 +538,7 @@
     const container = document.getElementById("chatkit-container");
 
     bubble.addEventListener("click", async () => {
+      console.log("💬 Burbuja clickeada!"); // kawaii debug
       if (!chatLoaded) {
         await initChatKit();
         chatLoaded = true;
@@ -547,8 +549,12 @@
     async function waitForChatKit() {
       return new Promise((resolve) => {
         const check = () => {
-          if (window.ChatKit && window.ChatKit.mount) return resolve();
-          setTimeout(check, 50);
+          if (window.ChatKit && window.ChatKit.mount) {
+            console.log("🌸 ChatKit cargado!");
+            return resolve();
+          }
+          console.log("⏳ Esperando a ChatKit...");
+          setTimeout(check, 80);
         };
         check();
       });
@@ -566,6 +572,7 @@
               method: "POST"
             });
             const data = await res.json();
+            console.log("🔑 client_secret recibido:", data);
             return data.client_secret;
           }
         },
@@ -577,17 +584,6 @@
             baseSize: 16,
             fontFamily:
               '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif',
-            fontFamilyMono:
-              'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace',
-            fontSources: [
-              {
-                family: 'OpenAI Sans',
-                src: 'https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2',
-                weight: 400,
-                style: 'normal',
-                display: 'swap'
-              }
-            ]
           }
         },
         composer: {
@@ -600,14 +596,15 @@
         }
       };
 
-      // 🚀 Ahora sí, ChatKit está cargado → lo montamos
+      // 🚀 Ahora sí, montamos ChatKit kawaii~
       chatInstance = await window.ChatKit.mount({
         element: container,
         options
       });
+
+      console.log("🌈 ChatKit montado con éxito!");
     }
   </script>
-
 
 </body>
 
