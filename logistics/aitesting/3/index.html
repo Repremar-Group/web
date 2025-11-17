@@ -542,10 +542,24 @@
       container.style.display = "block";
     });
 
+    async function waitForChatKit() {
+      return new Promise((resolve) => {
+        const check = () => {
+          if (window.ChatKit && window.ChatKit.mount) return resolve();
+          setTimeout(check, 50);
+        };
+        check();
+      });
+    }
+
     async function initChatKit() {
+
+      // 🔥 Esperamos que ChatKit cargue antes de montarlo
+      await waitForChatKit();
+
       const options = {
         api: {
-          async getClientSecret(existing) {
+          async getClientSecret() {
             const res = await fetch("/.netlify/functions/chatkit-session", {
               method: "POST"
             });
@@ -584,12 +598,14 @@
         }
       };
 
+      // 🚀 Ahora sí, ChatKit está cargado → lo montamos
       chatInstance = await window.ChatKit.mount({
         element: container,
         options
       });
     }
   </script>
+
 
 </body>
 
