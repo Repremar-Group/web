@@ -396,80 +396,93 @@
   </style>
 
   <script>
-document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
-  let chatLoaded = false;
-  let chatInstance = null;
-
-  const bubble = document.getElementById("chatkit-bubble");
-  const container = document.getElementById("chatkit-container");
-
-  if (!bubble) {
-    console.error("No se encontró #chatkit-bubble en el DOM.");
-    return;
-  }
-
-  bubble.addEventListener("click", async () => {
-    console.log("Burbuja clickeada!");
-    if (!chatLoaded) {
-      await initChatKit();
-      chatLoaded = true;
-    }
-    container.style.display = "block";
-  });
-
-  async function waitForChatKit() {
-    return new Promise((resolve) => {
-      const check = () => {
-        if (window.ChatKit && window.ChatKit.mount) {
-          console.log("ChatKit cargado!");
-          return resolve();
-        }
-        console.log("Esperando a ChatKit...");
-        setTimeout(check, 80);
+      // Inject ChatKit dynamically
+      const script = document.createElement("script");
+      script.src = "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js";
+      script.crossOrigin = "anonymous";
+      script.onload = () => {
+        console.log("ChatKit.js ejecutado correctamente.");
+        startChatIntegration();
       };
-      check();
-    });
-  }
+      script.onerror = () => console.error("Error cargando ChatKit.js");
+      document.body.appendChild(script);
 
-  async function initChatKit() {
-    await waitForChatKit();
+      function startChatIntegration() {
+        let chatLoaded = false;
+        let chatInstance = null;
 
-    const options = {
-      api: {
-        async getClientSecret() {
-          const res = await fetch("/.netlify/functions/chatkit-session", {
-            method: "POST"
-          });
-          const data = await res.json();
-          return data.client_secret;
+        const bubble = document.getElementById("chatkit-bubble");
+        const container = document.getElementById("chatkit-container");
+
+        if (!bubble) {
+          console.error("No se encontró #chatkit-bubble en el DOM.");
+          return;
         }
-      },
-      theme: {
-        colorScheme: 'light',
-        radius: 'pill',
-        density: 'normal'
-      },
-      composer: {
-        placeholder: 'Chatea con nuestra IA',
-        attachments: { enabled: false }
-      },
-      startScreen: {
-        greeting: 'Para iniciar brinde su usuario y clave del portal de tracking.',
-        prompts: []
+
+        bubble.addEventListener("click", async () => {
+          console.log("Burbuja clickeada!");
+          if (!chatLoaded) {
+            await initChatKit();
+            chatLoaded = true;
+          }
+          container.style.display = "block";
+        });
+
+        async function waitForChatKit() {
+          return new Promise((resolve) => {
+            const check = () => {
+              if (window.ChatKit && window.ChatKit.mount) {
+                console.log("ChatKit cargado!");
+                return resolve();
+              }
+              console.log("Esperando a ChatKit...");
+              setTimeout(check, 80);
+            };
+            check();
+          });
+        }
+
+        async function initChatKit() {
+          await waitForChatKit();
+
+          const options = {
+            api: {
+              async getClientSecret() {
+                const res = await fetch("/.netlify/functions/chatkit-session", {
+                  method: "POST"
+                });
+                const data = await res.json();
+                return data.client_secret;
+              }
+            },
+            theme: {
+              colorScheme: 'light',
+              radius: 'pill'
+            },
+            composer: {
+              placeholder: 'Chatea con nuestra IA',
+              attachments: { enabled: false }
+            },
+            startScreen: {
+              greeting: 'Para iniciar brinde su usuario y clave del portal de tracking.',
+              prompts: []
+            }
+          };
+
+          chatInstance = await window.ChatKit.mount({
+            element: container,
+            options
+          });
+
+          console.log("ChatKit montado con éxito!");
+        }
       }
-    };
 
-    chatInstance = await window.ChatKit.mount({
-      element: container,
-      options
     });
+  </script>
 
-    console.log("ChatKit montado con éxito!");
-  }
-
-});
-</script>
 
 
 </body>
