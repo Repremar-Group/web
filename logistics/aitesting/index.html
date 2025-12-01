@@ -14,8 +14,7 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/colors/green.css">
   <link rel="preload" href="./assets/css/fonts/urbanist.css" as="style" onload="this.rel='stylesheet'">
-  <script src="https://cdn.openai.com/chatkit/chatkit.js"></script>
-
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
 
 </head>
 
@@ -499,9 +498,9 @@
     // Esperar a que ChatKit esté disponible
     async function waitForChatKit() {
       return new Promise(resolve => {
-        if (window.ChatKit) return resolve();
+        if (window.chatkit) return resolve();
         const check = setInterval(() => {
-          if (window.ChatKit) {
+          if (window.chatkit) {
             clearInterval(check);
             resolve();
           }
@@ -531,7 +530,7 @@
           if (!chatMounted) {
             chatMounted = true;
 
-            const chat = await window.ChatKit.mount(wrapper, {
+            const chat = await window.chatkit.mount(wrapper, {
               api: {
                 async getClientSecret(existing) {
                   const res = await fetch("/.netlify/functions/chatkit-session", {
