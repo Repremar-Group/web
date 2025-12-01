@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/colors/green.css">
   <link rel="preload" href="./assets/css/fonts/urbanist.css" as="style" onload="this.rel='stylesheet'">
-  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script>
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
 
 </head>
 
@@ -495,7 +495,24 @@
   <script src="./assets/js/theme.js"></script>
   <!--BLOQUE PARA EL AGENTE AI WEB-->
   <script>
+    // Esperar a que ChatKit esté disponible
+    async function waitForChatKit() {
+      return new Promise(resolve => {
+        if (window.ChatKit) return resolve();
+        const check = setInterval(() => {
+          if (window.ChatKit) {
+            clearInterval(check);
+            resolve();
+          }
+        }, 50);
+      });
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
+
+      // Asegurar que ChatKit cargó antes de usarlo
+      await waitForChatKit();
+
       const bubble = document.getElementById("chatBubble");
       const wrapper = document.getElementById("chatWindowWrapper");
 
@@ -565,6 +582,7 @@
       });
     });
   </script>
+
 
 
   <style>
