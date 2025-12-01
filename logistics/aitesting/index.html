@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/colors/green.css">
   <link rel="preload" href="./assets/css/fonts/urbanist.css" as="style" onload="this.rel='stylesheet'">
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script>
+
 </head>
 
 <body>
@@ -491,390 +493,124 @@
   </div>
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/theme.js"></script>
+  <!--BLOQUE PARA EL AGENTE AI WEB-->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const bubble = document.getElementById("chatBubble");
+      const wrapper = document.getElementById("chatWindowWrapper");
 
-  <!-- Chat Widget Repremar -->
-  <link rel="preconnect" href="https://cdn.openai.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+      let chatIsOpen = false;
+      let chatMounted = false;
+
+      // Al hacer click en la burbuja
+      bubble.addEventListener("click", async () => {
+        chatIsOpen = !chatIsOpen;
+
+        if (chatIsOpen) {
+          wrapper.style.display = "block";
+
+          // Montar el chat solo la primera vez
+          if (!chatMounted) {
+            chatMounted = true;
+
+            const chat = await window.ChatKit.mount(wrapper, {
+              api: {
+                async getClientSecret(existing) {
+                  const res = await fetch("/.netlify/functions/chatkit-session", {
+                    method: "POST",
+                  });
+                  const data = await res.json();
+                  return data.client_secret;
+                },
+              },
+
+              /* === TEMA + OPCIONES EXACTAS QUE PEDISTE === */
+              theme: {
+                colorScheme: 'light',
+                radius: 'pill',
+                density: 'normal',
+                typography: {
+                  baseSize: 16,
+                  fontFamily: '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif',
+                  fontFamilyMono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace',
+                  fontSources: [
+                    {
+                      family: 'OpenAI Sans',
+                      src: 'https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2',
+                      weight: 400,
+                      style: 'normal',
+                      display: 'swap'
+                    }
+                  ]
+                },
+              },
+
+              composer: {
+                placeholder: 'Chatea con nuestra IA',
+                attachments: {
+                  enabled: false,
+                },
+              },
+
+              startScreen: {
+                greeting: 'Para iniciar brinde su usuario y clave del portal de tracking.',
+                prompts: [],
+              },
+            });
+          }
+
+        } else {
+          wrapper.style.display = "none";
+        }
+      });
+    });
+  </script>
+
+
   <style>
-    /* --- Estilos generales --- */
-    #chatkit-wrapper {
-      position: fixed;
-      bottom: 100px;
-      /* espacio seguro para no chocar con la burbuja */
-      right: 25px;
-      width: min(420px, 90vw);
-      /* se adapta al ancho disponible */
-      height: min(80vh, 680px);
-      /* ocupa 80% del alto visible, sin pasarse */
-      background: #111;
-      color: #f1f1f1;
-      border-radius: 30px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 9998;
-      /* debajo de la burbuja */
-      font-family: 'Inter', system-ui, sans-serif;
-      transform: scale(0.95);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
-
-
-    #chatkit-wrapper.open {
-      display: flex;
-      opacity: 1;
-      transform: scale(1);
-      animation: fadeIn 0.3s ease forwards;
-    }
-
-    /* --- Header --- */
-    #chatkit-header {
-      background: linear-gradient(90deg, #3eb6aa, #102f69);
-      color: #fff;
-      font-weight: 600;
-      text-align: center;
-      padding: 12px;
-      letter-spacing: .5px;
-    }
-
-    /* --- Mensajes --- */
-    #chatkit-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
-      font-size: 15px;
-    }
-
-    .msg-user,
-    .msg-bot {
-      max-width: 85%;
-      padding: 8px 12px;
-      margin: 8px 0;
-      border-radius: 18px;
-      line-height: 1.4;
-      word-wrap: break-word;
-    }
-
-    .msg-user {
-      background: #102f69;
-      color: #fff;
-      margin-left: auto;
-      border-bottom-right-radius: 0;
-    }
-
-    .msg-bot {
-      background: #222;
-      color: #eee;
-      margin-right: auto;
-      border-bottom-left-radius: 0;
-    }
-
-    /* --- Input --- */
-    #chatkit-inputbox {
-      display: flex;
-      border-top: 1px solid #333;
-    }
-
-    #chatkit-input {
-      flex: 1;
-      border: none;
-      background: #111;
-      color: #eee;
-      padding: 10px 14px;
-      outline: none;
-      font-size: 15px;
-    }
-
-    #chatkit-send {
-      background: #102f69;
-      border: none;
-      color: #fff;
-      padding: 0 18px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    /* --- Burbuja flotante --- */
-    #chatkit-bubble {
+    /* --- BURBUJA FLOTANTE --- */
+    #chatBubble {
       position: fixed;
       bottom: 25px;
       right: 25px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #102f69, #102f69);
+      width: 65px;
+      height: 65px;
+      background: #00b894;
+      color: white;
       border-radius: 50%;
-      box-shadow: 0 0 20px rgba(11, 95, 255, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
       cursor: pointer;
       z-index: 9999;
-      /* siempre arriba del wrapper */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s ease;
     }
 
-
-    #chatkit-bubble:hover {
+    #chatBubble:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(11, 95, 255, 0.7);
     }
 
-    #chatkit-bubble svg {
-      width: 28px;
-      height: 28px;
-      fill: white;
-    }
-
-    /* --- Animación de aparición --- */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* --- RESPONSIVE DESIGN --- */
-
-    /* 📱 Móviles (pantallas pequeñas) */
-    @media (max-width: 600px) {
-      #chatkit-wrapper {
-        bottom: 0;
-        right: 0;
-        width: 100vw;
-        height: 100vh;
-        border-radius: 0;
-        max-height: 100vh;
-      }
-
-      #chatkit-header {
-        font-size: 16px;
-        padding: 10px;
-      }
-
-      #chatkit-messages {
-        font-size: 14px;
-        padding: 10px;
-      }
-
-      #chatkit-input {
-        font-size: 14px;
-        padding: 8px 10px;
-      }
-
-      #chatkit-send {
-        padding: 0 14px;
-        font-size: 14px;
-      }
-
-      #chatkit-bubble {
-        width: 55px;
-        height: 55px;
-        bottom: 15px;
-        right: 15px;
-      }
-
-      #chatkit-bubble svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-
-    /* 💻 Tablets y notebooks medianas (incluye pantallas 13”-15”) */
-    @media (min-width: 601px) and (max-width: 1280px),
-    (max-height: 900px) {
-      #chatkit-wrapper {
-        width: min(420px, 90vw);
-        height: min(80vh, 680px);
-        bottom: 100px;
-        /* evita solaparse con la burbuja */
-        right: 25px;
-        border-radius: 25px;
-      }
-
-      #chatkit-header {
-        font-size: 17px;
-        padding: 12px;
-      }
-
-      #chatkit-messages {
-        font-size: 14px;
-      }
-
-      #chatkit-bubble {
-        width: 55px;
-        height: 55px;
-        bottom: 25px;
-        right: 25px;
-      }
-
-      #chatkit-bubble svg {
-        width: 26px;
-        height: 26px;
-      }
-    }
-
-    /* 🖥️ Pantallas grandes (monitores de escritorio) */
-    @media (min-width: 1281px) {
-      #chatkit-wrapper {
-        width: 480px;
-        height: 740px;
-        bottom: 100px;
-        /* espacio seguro respecto a la burbuja */
-        right: 25px;
-      }
-
-      #chatkit-bubble {
-        width: 60px;
-        height: 60px;
-        bottom: 25px;
-        right: 25px;
-      }
-
-      #chatkit-bubble svg {
-        width: 28px;
-        height: 28px;
-      }
+    /* --- CONTENEDOR DEL CHAT --- */
+    #chatWindowWrapper {
+      position: fixed;
+      bottom: 100px;
+      right: 25px;
+      width: 380px;
+      height: 600px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.30);
+      display: none;
+      /* oculto al inicio */
+      z-index: 9998;
+      overflow: hidden;
     }
   </style>
-  <!-- Chat Widget -->
-  <div id="chatkit-wrapper">
-    <div id="chatkit-header">Repremar Virtual Assistant</div>
-    <div id="chatkit-messages">
-      <div class="msg-bot">Para realizar consultas, ingrese su usuario del portal de tracking.<br>"usuario contraseña".
-      </div>
-    </div>
-    <div id="chatkit-inputbox">
-      <input id="chatkit-input" placeholder="Consulte por sus cargas!" />
-      <button id="chatkit-send">➤</button>
-    </div>
-  </div>
 
-  <!-- Burbuja flotante -->
-  <div id="chatkit-bubble" title="Abrir chat">
-    <svg viewBox="0 0 24 24">
-      <path d="M20 2H4C2.897 2 2 2.897 2 4v18l4-4h14c1.103 0 2-.897 2-2V4C22 2.897 21.103 2 20 2z"></path>
-    </svg>
-  </div>
-
-  <script>
-    const chatWrapper = document.getElementById("chatkit-wrapper");
-    const chatBubble = document.getElementById("chatkit-bubble");
-    const input = document.getElementById("chatkit-input");
-    const messages = document.getElementById("chatkit-messages");
-    const sendBtn = document.getElementById("chatkit-send");
-
-    let threadId = null;
-    let conversationHistory = [];
-
-    // 🧠 Restaurar conversación al cargar la página
-    window.addEventListener("load", () => {
-      const saved = sessionStorage.getItem("repremar_chat_history");
-      if (saved) {
-        conversationHistory = JSON.parse(saved);
-        conversationHistory.forEach(msg => appendMessage(msg.text, msg.role === "user" ? "user" : "bot"));
-      }
-    });
-
-    // 💬 Mostrar mensaje en el chat
-    function appendMessage(text, from = "bot") {
-      const div = document.createElement("div");
-      div.className = from === "user" ? "msg-user" : "msg-bot";
-      div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function appendCargaCard(carga) {
-      const card = document.createElement("div");
-      card.className = "msg-bot";
-      card.innerHTML = `
-    <div style="
-      background:#1a1a1a;
-      border-radius:16px;
-      padding:12px;
-      margin-top:8px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.4);
-    ">
-      <h4 style="margin:0 0 8px 0;color:#0b5fff;">🚢 Detalles de la carga</h4>
-      <div style="font-size:14px;line-height:1.6;">
-        <b>Origen:</b> ${carga.origen}<br>
-        <b>Destino:</b> ${carga.destino}<br>
-        <b>Transportista:</b> ${carga.transportista}<br>
-        <b>ETD:</b> ${carga.etd}<br>
-        <b>ETD</b> ${carga.eta}<br>
-        <b>Agente:</b> ${carga.agente}<br>
-        <b>Número Cliente:</b> ${carga.numeroCliente}
-      </div>
-    </div>
-  `;
-      messages.appendChild(card);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-
-    // 🚀 Enviar mensaje al servidor
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
-
-      appendMessage(text, "user");
-      conversationHistory.push({ role: "user", text });
-      input.value = "";
-
-      appendMessage("Procesando su solicitud…", "bot");
-
-      try {
-        const res = await fetch("/.netlify/functions/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text,
-            history: conversationHistory.slice(-10), // últimas 10 interacciones
-            thread_id: threadId
-          })
-        });
-
-        const data = await res.json();
-        messages.lastChild.remove(); // borra el “Procesando su solicitud…” temporal
-
-        let replyText = "";
-
-        if (data.cargaData) {
-          appendMessage("Estimado cliente, la información de la carga es la siguiente:", "bot");
-          appendCargaCard(data.cargaData);
-          replyText = "Widget de carga mostrado"; // texto simbólico para historial
-        } else {
-          replyText = data.reply || "Error obteniendo respuesta";
-          appendMessage(replyText, "bot");
-        }
-
-        conversationHistory.push({ role: "assistant", text: replyText });
-        sessionStorage.setItem("repremar_chat_history", JSON.stringify(conversationHistory));
-
-        if (data.thread_id) threadId = data.thread_id;
-      } catch (e) {
-        messages.lastChild.textContent = "⚠️ Error de conexión";
-      }
-    }
-
-    // 🟢 Enviar mensaje con Enter o click
-    sendBtn.onclick = sendMessage;
-    input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
-
-    // 💭 Abrir/cerrar chat
-    chatBubble.onclick = () => {
-      chatWrapper.classList.toggle("open");
-    };
-  </script>
-
+  <div id="chatBubble">💬</div>
+  <div id="chatWindowWrapper"></div>
 
 
 </body>
